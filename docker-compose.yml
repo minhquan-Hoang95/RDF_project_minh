@@ -1,0 +1,87 @@
+services:
+  postgres:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    container_name: postgres
+    environment:
+      - TZ=Europe/Paris
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB_NAME=${POSTGRES_DB}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    networks:
+      pir-rdf:
+        ipv4_address: 172.35.0.2
+    restart: always
+
+  api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: api
+    ports:
+      - "${API_PORT}:3001"
+    environment:
+      - TZ=Europe/Paris
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+      - SPRING_MAIL_HOST=${SPRING_MAIL_HOST}
+      - SPRING_MAIL_PORT=${SPRING_MAIL_PORT}
+      - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
+      - API_BASE_URL=${API_BASE_URL}
+    volumes:
+      - ./API/Logs:/app/Logs
+      - ./plugin/build:/app/plugin
+    networks:
+      pir-rdf:
+        ipv4_address: 172.35.0.3
+    depends_on:
+      - postgres
+    restart: always
+
+  plugin:
+    build:
+      context: ./plugin
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}
+    container_name: plugin
+    working_dir: /app
+    command: sh -c "npm run build && tail -f /dev/null"
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - ./plugin/build:/app/build
+
+  website:
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+      args:
+        VITE_APP_API_BASE_URL: ${VITE_APP_API_BASE_URL}
+    container_name: website
+    environment:
+      - TZ=Europe/Paris
+    ports:
+      - "${WEBSITE_PORT}:80"
+    networks:
+      pir-rdf:
+        ipv4_address: 172.35.0.4
+    restart: always
+
+networks:
+  pir-rdf:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.35.0.0/16"
+          gateway: "172.35.0.1"

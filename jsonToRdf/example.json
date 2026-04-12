@@ -1,0 +1,63 @@
+{
+  "id": 202,
+  "name": "ee",
+  "selectedThesauri": [
+    "DBpedia"
+  ],
+  "date": "2025-06-11T15:59:10.841+00:00",
+  "creator": {
+    "email": "colindeseroux@gmail.com"
+  },
+  "participants": [],
+  "invitations": [],
+  "annotations": [
+    {
+      "id": 153,
+      "description": "ee",
+      "annotationType": "comment",
+      "pageUrl": "https://chatgpt.com/c/6849a747-4390-8009-ae8f-b00740db7964",
+      "item": {
+        "type": "text",
+        "value": "edded Python) – good performance, uses CPython."
+      },
+      "concepts": [
+        {
+          "uri": "http://dbpedia.org/resource/Caarpsee",
+          "value": "Caarpsee"
+        }
+      ],
+      "date": "2025-06-11T15:59:38.606+00:00",
+      "campaign": {
+        "id": 202,
+        "name": "ee"
+      },
+      "creator": {
+        "email": "colindeseroux@gmail.com"
+      }
+    },
+    {
+      "id": 152,
+      "description": "ee",
+      "annotationType": "comment",
+      "pageUrl": "https://chatgpt.com/c/6849a747-4390-8009-ae8f-b00740db7964",
+      "item": {
+        "type": "text",
+        "value": "Jepp (Java embedded Python) – good performance, use"
+      },
+      "concepts": [
+        {
+          "uri": "http://dbpedia.org/resource/Caarpsee",
+          "value": "Caarpsee"
+        }
+      ],
+      "date": "2025-06-11T15:59:25.625+00:00",
+      "campaign": {
+        "id": 202,
+        "name": "ee"
+      },
+      "creator": {
+        "email": "colindeseroux@gmail.com"
+      }
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+.campaign-container {
+  padding: 20px;
+  margin-top: 80px;
+  background-color: #ffffff;
+}
+
+.logout-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: darkgray;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.logout-button:hover {
+  background-color: #e7e7e7;
+}
+
+.campaigns-list .campaign {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gear-icon-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.campaign-input,
+.join-campaign button,
+.create-campaign button {
+  padding: 8px 12px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.campaign-button {
+  padding: 8px 12px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #3498db;
+  color: #ffffff;
+}
+
+.back-arrow {
+  cursor: pointer;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.Modal,
+.Modal form {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.Modal input[type="radio"] + label {
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+.Modal button[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-top: 10px;
+}
+
+.Modal button[type="submit"]:hover {
+  background-color: #45a049;
+}

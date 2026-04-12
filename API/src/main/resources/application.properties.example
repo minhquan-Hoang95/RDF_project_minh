@@ -1,0 +1,43 @@
+spring.application.name=pir-rdf
+
+# Api Properties
+server.port=3001
+spring.main.allow-bean-definition-overriding=true
+cors.allowed.origins=*
+uri.authorized=/api/plugin, /swagger, /public, /api/auth, /hello, /api/hello, /api/campaign/accept
+api.base.url=http://localhost:3001/api
+
+# Postgres Properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/rdf
+spring.datasource.username=postgres
+spring.datasource.password=123
+
+# MySQL Properties
+#spring.datasource.url=jdbc:mysql://localhost:3306/rdf
+#spring.datasource.username=mysql
+#spring.datasource.password=123
+
+# JPA Properties
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.open-in-view=true
+spring.jpa.properties.hibernate.enable_lazy_load_no_trans=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+spring.jpa.properties.hibernate.type=trace
+spring.jpa.show-sql=false
+
+# Mail properties
+spring.mail.host=<smtp.example.com>
+spring.mail.port=<port>
+spring.mail.username=<email>
+spring.mail.password=<application password>
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# Thymeleaf properties
+spring.thymeleaf.check-template-location=false
+
+# Jwt Properties
+jwt.secret=1234567890123456789012345678901234567890123456789012345678901234
+# 12 heures
+jwt.expiration=43200

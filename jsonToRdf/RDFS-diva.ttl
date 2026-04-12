@@ -1,0 +1,1629 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix diva: <http://example.org/diva#> . # Data, Interaction, Visualization, Analysis
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+
+# Uses dcterms:title to define the name of entities (prov:Entity)
+
+# The target class is used to represent any visual element in the visualization that can be interacted with
+diva:Target a rdfs:Class ;
+    rdfs:label "Visual target"@en ;
+    rdfs:comment "The visual element in the visualization being interacted with (mark, glyph, axis, legend, etc.)."@en .
+
+diva:hasAnnotation a rdf:Property ;
+    rdfs:domain diva:Target ;
+    rdfs:range oa:Annotation ;
+    rdfs:label "has annotation" ;
+    rdfs:comment "Links a visual target to its annotations." .
+
+# --- User ---
+# The User class is a subclass of prov:Agent
+
+diva:User a rdfs:Class ;
+    rdfs:subClassOf prov:Agent ;
+    rdfs:label "User"@en ;
+    rdfs:comment "The user interacting with the visualization."@en .
+
+diva:System a rdfs:Class ;
+    rdfs:subClassOf prov:Agent ;
+    rdfs:label "System"@en ;
+    rdfs:comment "The system or application that provides the visualization."@en .
+
+# --- View --
+# The View class is a subclass of prov:Entity
+# The View class is a subclass of diva:Target
+# Uses prov:wasAttributedTo from the PROV ontology to link the view to the user who created it
+diva:View a rdfs:Class ;
+    rdfs:subClassOf prov:Entity, diva:Target ;
+    rdfs:label "View" ;
+    rdfs:comment "A container for one or multiple visualization techniques." .
+
+diva:hasVisualization a rdf:Property ;
+    rdfs:domain diva:View ;
+    rdfs:range diva:Visualization ;
+    rdfs:label "has visualization" ;
+    rdfs:comment "Links a view to its visualizations." .
+
+diva:hasViewType a rdf:Property ;
+    rdfs:domain diva:View ;
+    rdfs:range diva:ViewType ;
+    rdfs:label "has view type" ;
+    rdfs:comment "The type of view (e.g., dashboard, single view)." .
+
+diva:hasDescription a rdf:Property ;
+    rdfs:domain diva:Annotation ;
+    rdfs:range xsd:Description ;
+    rdfs:label "has view type" ;
+    rdfs:comment "The type of view (e.g., dashboard, single view)."
+
+### --- SKOS Concept Scheme for View Types ---
+diva:ViewTypeScheme a skos:ConceptScheme ;
+    rdfs:label "View Type Scheme"@en ;
+    rdfs:comment "A SKOS scheme defining types of views in a visualization (e.g., single view, dashboard)."@en .
+
+diva:ViewType a skos:Concept ;
+    skos:inScheme diva:ViewTypeScheme ;
+    skos:prefLabel "View Type"@en ;
+    skos:definition "A type of view in a visualization, such as single view or dashboard."@en .
+
+### --- View Type Concepts ---
+diva:SingleView a skos:Concept ;
+    skos:inScheme diva:ViewTypeScheme ;
+    skos:broader diva:ViewType ;
+    skos:prefLabel "Single View"@en ;
+    skos:definition "A standalone view showing a single visualization or component."@en .
+
+diva:DashboardView a skos:Concept ;
+    skos:inScheme diva:ViewTypeScheme ;
+    skos:broader diva:ViewType ;
+    skos:prefLabel "Dashboard View"@en ;
+    skos:definition "A composite view that integrates multiple visualizations or components."@en .
+
+
+# ----- Data -----
+# Classes
+# Uses all prov classes to describe the transformations in the data, if necessary
+# The DataPoint class is a subclass of prov:Entity
+# The DataPoint class is a subclass of diva:Target
+# Uses prov:wasAttributedTo from the PROV ontology to link to the user who created it
+# Uses dcterms:title to provide a name to the data source
+# Uses prov:wasGeneratedBy from the PROV ontology to link the data source to the transform function (diva:TransformFunction) that generated it
+
+diva:DataSource a rdfs:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Data Source" ;
+    rdfs:comment "The data feeding a visualization." .
+
+# Uses prov:associatedWith from the PROV ontology to link the data point to the data source it is associated with
+diva:DataRecord a rdfs:Class ;
+    rdfs:subClassOf prov:Entity, diva:Target ;
+    rdfs:label "Data Point"@en;
+    rdfs:comment "An individual record of data linked to a visual mark. It can originate from various data formats (RDF, CSV, JSON)."@en .
+
+# Properties of the data source
+diva:hasUrl a rdf:Property ;
+    rdfs:domain diva:DataSource ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "url" ;
+    rdfs:comment "The URL where the data source can be found, including SPARQL endpoints and REST APIs" .
+
+diva:hasQuery a rdf:Property ;
+    rdfs:domain diva:DataSource ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "query" ;
+    rdfs:comment "The query used to retrieve the data from the data source." .
+
+diva:hasDataTransformFunction a rdf:Property ;
+    rdfs:domain diva:DataSource ;
+    rdfs:range diva:TransformFunction ;
+    rdfs:label "Transform function"@en ;
+    rdfs:comment "The transform function applied to the data (e.g., count, sum, average, filter)."@en .
+
+# Properties of the data record
+diva:hasDataField a rdf:Property ;
+    rdfs:domain diva:DataRecord ;
+    rdfs:range diva:Field ;
+    rdfs:label "has data field" ;
+    rdfs:comment "Links a data source to its fields (attributes)." .
+
+
+diva:hasRawContent a rdf:Property ; # Q: is it necessary to have this property? 
+    rdfs:domain diva:DataRecord ;
+    rdfs:range rdf:langString ;
+    rdfs:label "Raw Content"@en ;
+    rdfs:comment "A raw string content representing the data point, e.g., a JSON object, a CSV row, or a serialized RDF snippet."@en .
+
+diva:hasExternalReference a rdf:Property ;
+    rdfs:domain diva:DataRecord ;
+    rdfs:range rdfs:String ;
+    rdfs:label "External Reference"@en ;
+    rdfs:comment "A pointer (URI, file path, ID) to the actual data point, in external data sources."@en .
+
+
+# ---- Visualization ----
+# Classes to describe a visualization technique based on the Vega-Lite grammar
+
+# The Visualization class is a subclass of prov:Entity
+# Uses prov:wasAttributedTo from the PROV ontology to link the visualization to the user (prov:Agent) who created it
+# Uses prov:wasGeneratedBy from the PROV ontology to link the visualization to the interaction (prov:Activity) that generated it
+# Uses prov:wasDerivedFrom from the PROV ontology to link the visualization to the view or data source (prov:Entity) that it is based on
+# Uses dcterms:title to describe the title of the visualization
+
+diva:Visualization a rdfs:Class ;
+    rdfs:subClassOf prov:Entity, diva:Target ;
+    rdfs:label "Visualization" ;
+    rdfs:comment "A Vega-Lite visualization specification." .
+
+diva:Encoding a rdfs:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Encoding" ;
+    rdfs:comment "An association between a data field and a visual channel." .
+
+diva:Field a rdfs:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Field" ;
+    rdfs:comment "A field (attribute) from the data source." .
+
+diva:Legend a rdfs:Class ;
+    rdfs:subClassOf prov:Entity, diva:Target ;
+    rdfs:label "Legend" ;
+    rdfs:comment "A legend that provides information about the visual encoding." .
+
+# Signals (dynamic variables that parametrize a visualization and can drive interactive behavior)
+diva:Signal a rdfs:Class ;
+    rdfs:subClassOf prov:Entity, diva:Target ;
+    rdfs:label "Signal"@en ;
+    rdfs:comment "A dynamic signal that can be used to parameterize visualizations, such as node distance or gravity."@en .
+
+## --- Visualization Properties
+diva:hasVisualizationType a rdf:Property ;
+    rdfs:domain diva:Visualization ;
+    rdfs:range diva:VisualizationType ; # Types are defined as skos concepts below
+    rdfs:label "has visualization type" ;
+    rdfs:comment "The type of visualization (e.g., bar chart, line chart)." .
+
+diva:hasDataSource a rdf:Property ;
+    rdfs:domain diva:Visualization ;
+    rdfs:range diva:DataSource ;
+    rdfs:label "has data source" ;
+    rdfs:comment "Links a visualization to its data source." .
+
+diva:hasMark a rdf:Property ;
+    rdfs:domain diva:Visualization ;
+    rdfs:range diva:Mark ; # Marks are defined as skos concepts below
+    rdfs:label "has mark" ;
+    rdfs:comment "Links a visualization to its mark type." .
+
+diva:hasLegend a rdf:Property ;
+    rdfs:domain diva:Visualization ;
+    rdfs:range diva:Legend ;
+    rdfs:label "has legend" ;
+    rdfs:comment "Links a visualization to its legend." .
+
+diva:hasEncoding a rdf:Property ;
+    rdfs:domain diva:Visualization ;
+    rdfs:range diva:Encoding ;
+    rdfs:label "has encoding" ;
+    rdfs:comment "Links a visualization to its encodings." .
+
+diva:hasSignal a rdf:Property ;
+    rdfs:domain diva:Visualization ;
+    rdfs:range diva:Signal ;
+    rdfs:label "has signal" ;
+    rdfs:comment "Links a visualization to its dynamic signals." .
+
+## --- Encoding properties
+diva:isRepresentedBy a rdf:Property ;
+    rdfs:domain diva:Encoding ;
+    rdfs:range diva:Legend ;
+    rdfs:label "is represented by legend"@en ;
+    rdfs:comment "Links an encoding to the legend that represents it in the visualization."@en .
+
+diva:hasEncodingChannel a rdf:Property ;
+    rdfs:domain diva:Encoding ;
+    rdfs:range diva:EncodingChannel ; # Channels are defined as skos concepts below
+    rdfs:label "has channel" ;
+    rdfs:comment "Links an encoding to a visual channel (e.g., color, size)." .
+
+diva:hasEncodingField a rdf:Property ;
+    rdfs:domain diva:Encoding ;  
+    rdfs:range diva:Field ;   
+    rdfs:label "has field"@en ;
+    rdfs:comment "Links a visual channel to a data field."@en .
+
+# In Vega-Lite, scale is a property of an encoding channel, not itself an encoding channel. 
+# So conceptually, scale is more like a characteristic or attribute of an encoding, not an encoding channel by itself.
+diva:hasScaleType a rdf:Property ;
+    rdfs:domain diva:Encoding ;
+    rdfs:range diva:ScaleType ; # Scale types are defined as skos concepts below
+    rdfs:label "has scale type"@en ;
+    rdfs:comment "Links an encoding channel to its scale type (e.g., linear, ordinal)."@en .
+
+## --- Field properties
+diva:hasFieldName a rdf:Property ;
+    rdfs:domain diva:Field ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "field name" ;
+    rdfs:comment "The name of the field in the data source." .
+
+diva:hasFieldType a rdf:Property ;
+    rdfs:domain diva:Field ;
+    rdfs:range diva:FieldType ; # Field types are defined as skos concepts below
+    rdfs:label "field type" ;
+    rdfs:comment "The type of the field (e.g., quantitative, nominal)." .
+
+diva:hasFieldValue a rdf:Property ;
+    rdfs:domain diva:Field ;  
+    rdfs:range rdfs:Literal ;   
+    rdfs:label "has value"@en ;
+    rdfs:comment "Links a field to a value."@en .
+
+## --- Signal properties
+diva:hasSignalType a rdf:Property ;
+    rdfs:domain diva:Signal ;
+    rdfs:range diva:SignalType ; # Signal types are defined as skos concepts below
+    rdfs:label "Signal type"@en ;
+    rdfs:comment "The type of the signal, such as 'gravity', 'repulsion', or 'link distance'."@en .
+
+# Property for updated signal values
+diva:hasSignalValue a rdf:Property ;
+    rdfs:label "has updated value"@en ;
+    rdfs:comment "Links a signal concept to its new value after a change triggered by interaction."@en ;
+    rdfs:domain diva:Signal ;
+    rdfs:range rdfs:Literal .
+
+
+# Link interactions to dynamic signals and configuration options
+diva:changedByInteraction a rdf:Property ;
+    rdfs:domain diva:Signal ;
+    rdfs:range diva:Interaction ;
+    rdfs:label "Changed By Interaction"@en ;
+    rdfs:comment "Links a visualization characteristic (e.g., scale, node distance) or configuration option to the interaction that triggered the change (e.g., click, slider)."@en .
+
+### ----- SKOS Concept Schemes -----
+### SKOS Concept Scheme for Visualization types, marks, channels, and encodings
+## Following the classification proposed by the Data Visualization Catalogue (https://datavizcatalogue.com)
+
+# SKOS Concept Scheme for Visualization Types
+diva:VisualizationTypeScheme a skos:ConceptScheme ;
+    skos:prefLabel "Visualization Types"@en ;
+    skos:note "Common types of data visualizations."@en .
+
+# General broader concept for all visualizations    
+diva:VisualizationType a skos:Concept ;
+    skos:prefLabel "Visualization Type"@en ;
+    skos:definition "A type of visualization technique used to represent data."@en ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+
+# Visualization types per function
+
+diva:Comparison a skos:Concept ;
+    skos:prefLabel "Comparison"@en ;
+    skos:definition "A visualization type that allows comparing multiple data points or categories."@en ;
+    skos:broader diva:VisualizationType ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:Proportion a skos:Concept ;
+    skos:prefLabel "Proportion"@en ;
+    skos:definition "A visualization type that shows parts of a whole, often using pie or donut charts."@en ;
+    skos:broader diva:VisualizationType ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:Relationship a skos:Concept ;
+    skos:prefLabel "Relationship"@en ;
+    skos:definition "A visualization type that illustrates relationships between data points, such as scatter plots."@en ;
+    skos:broader diva:VisualizationType ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:Hierarchy a skos:Concept ;
+    skos:prefLabel "Hierarchy"@en ;
+    skos:definition "A visualization type that represents hierarchical data structures, such as tree diagrams or dendrograms."@en ;
+    skos:broader diva:VisualizationType ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:Concepts a skos:Concept ;
+    skos:prefLabel "Concepts"@en ;
+    skos:definition "A visualization type that represents abstract concepts or categories, often using word clouds or concept maps."@en ;
+    skos:broader diva:VisualizationType ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:Location a skos:Concept ;
+    skos:prefLabel "Location"@en ;
+    skos:definition "A visualization type that represents geographic or spatial data, such as maps."@en ;
+    skos:broader diva:VisualizationType ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:Distribution a skos:Concept ;
+    skos:prefLabel "Distribution"@en ;
+    skos:definition "A visualization type that shows the distribution of data points, such as histograms or box plots."@en ;
+    skos:broader diva:VisualizationType ;
+    skos:inScheme diva:VisualizationTypeScheme .    
+
+diva:Movement a skos:Concept ;
+    skos:prefLabel "Movement"@en ;
+    skos:definition "A visualization type that represents changes over time or movement patterns, such as line charts or flow maps."@en ;
+    skos:broader diva:VisualizationType ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:DataOverTime a skos:Concept ;
+    skos:prefLabel "Data Over Time"@en ;
+    skos:definition "A visualization type that shows how data changes over time, such as time series charts."@en ;
+    skos:broader diva:VisualizationType ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:UnknownVisualization a skos:Concept ;
+    skos:prefLabel "Unknown Visualization"@en ;
+    skos:definition "A placeholder for visualizations that do not fit into any known category."@en ;
+    skos:broader diva:VisualizationType ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+# Specific visualization techniques
+
+
+diva:RadarChart a skos:Concept ;
+    skos:prefLabel "Radial Chart"@en ;
+    skos:definition "A circular chart that displays data in a radial layout, often used for showing proportions or relationships."@en ;
+    skos:broader diva:Comparison ;
+    skos:broader diva:Relationship ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:ParallelCoordinatesPlot a skos:Concept ;
+    skos:prefLabel "Parallel Coordinates"@en ;
+    skos:definition "A visualization technique that displays multivariate data using parallel axes, allowing for comparison of multiple variables."@en ;
+    skos:broader diva:Comparison ;
+    skos:broader diva:Relationship ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:ChordDiagram a skos:Concept ;
+    skos:prefLabel "Chord Diagram"@en ;
+    skos:definition "A visualization that shows relationships between data points using arcs and chords."@en ;
+    skos:broader diva:Relationship ;
+    skos:broader diva:Comparison ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:ArcDiagram a skos:Concept ;
+    skos:prefLabel "Arc Diagram"@en ;
+    skos:definition "A visualization that represents relationships between data points using arcs, often used for network data."@en ;
+    skos:broader diva:Relationship ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:BarChart a skos:Concept ;
+    skos:prefLabel "Bar Chart"@en ;
+    skos:definition "A chart that uses bars to show quantities for different categories."@en ;
+    skos:brader diva:Comparison ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:LineGraph a skos:Concept ;
+    skos:prefLabel "Line Chart"@en ;
+    skos:definition "A chart that uses lines to connect data points, showing trends over time."@en ;
+    skos:broader diva:Comparison ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:StackedAreaGraph a skos:Concept ;
+    skos:prefLabel "Stacked Area Chart"@en ;
+    skos:definition "A chart that displays the cumulative totals of multiple data series, showing how each contributes to the whole over time."@en ;
+    skos:broader diva:Comparison ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:StackedBarChart a skos:Concept ;
+    skos:prefLabel "Stacked Bar Chart"@en ;
+    skos:definition "A bar chart where each bar is divided into segments representing different categories, showing the total and individual contributions."@en ;
+    skos:broader diva:Comparison ;
+    skos:broader diva:Proportion ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:PieChart a skos:Concept ;
+    skos:prefLabel "Pie Chart"@en ;
+    skos:definition "A circular chart divided into sectors, each representing a proportion of the whole."@en ;
+    skos:broader diva:Comparison ;
+    skos:broader diva:Proportion ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:DonutChart a skos:Concept ;
+    skos:prefLabel "Donut Chart"@en ;
+    skos:definition "A variation of the pie chart with a hole in the center, often used to show proportions."@en ;
+    skos:broader diva:Comparison ;
+    skos:broader diva:Proportion ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:Histogram a skos:Concept ;
+    skos:prefLabel "Histogram"@en ;
+    skos:definition "A graphical representation of the distribution of numerical data, using bars to show frequency."@en ;
+    skos:broader diva:Comparison ;
+    skos:broader diva:Distribution ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:BubbleChart a skos:Concept ;
+    skos:prefLabel "Bubble Chart"@en ;
+    skos:definition "A chart that uses circles to represent data points, with the size of the circle indicating a third variable."@en ;
+    skos:broader diva:Comparison ;
+    skos:broader diva:Proportion ;
+    skos:broader diva:Distribution ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:ScatterPlot a skos:Concept ;
+    skos:prefLabel "Scatter Plot"@en ;
+    skos:definition "A plot that uses Cartesian coordinates to display values for two variables for a set of data."@en ;
+    skos:broader diva:Relationship ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+# Maps
+
+diva:ChoroplethMap a skos:Concept ;
+    skos:prefLabel "Choropleth Map"@en ;
+    skos:broader diva:Map ;
+    skos:definition "A map that uses color to represent data values in geographic regions."@en ;
+    skos:broader diva:Location ;
+    skos:broader diva:Comparison ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:HeatMap a skos:Concept ;
+    skos:prefLabel "Heat Map"@en ;
+    skos:definition "A map that uses color gradients to represent data density or intensity."@en ;
+    skos:broader diva:Comparison ;
+    skos:broader diva:Relationship ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:ConnectionMap a skos:Concept ;
+    skos:prefLabel "Connection Map"@en ;
+    skos:definition "A map that shows connections or flows between geographic locations."@en ;
+    skos:broader diva:Location ;
+    skos:broader diva:Relationship ;
+    skos:broader diva:Distribution ;
+    skos:broader diva:Movement ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:BubbleMap a skos:Concept ;
+    skos:prefLabel "Bubble Map"@en ;
+    skos:definition "A map that uses bubbles to represent data points, with bubble size indicating a third variable."@en ;
+    skos:broader diva:Location ;
+    skos:broader diva:Proportion ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:DotMap a skos:Concept ;
+    skos:prefLabel "Dot Map"@en ;
+    skos:definition "A map that uses dots to represent the presence or quantity of a variable in geographic locations."@en ;
+    skos:broader diva:Location ;
+    skos:broader diva:Distribution ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:FlowMap a skos:Concept ;
+    skos:prefLabel "Flow Map"@en ;
+    skos:definition "A map that shows the movement of objects or data between locations, often using arrows."@en ;
+    skos:broader diva:Location ;
+    skos:broader diva:Relationship ;
+    skos:broader diva:Distribution ;
+    skos:broader diva:Movement ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+
+# Networks / trees
+
+diva:Treemap a skos:Concept ;
+    skos:prefLabel "Treemap"@en ;
+    skos:definition "A visualization that uses nested rectangles to represent hierarchical data."@en ;
+    skos:broader diva:Hierarchy ;
+    skos:broader diva:Proportion ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:NetworkDiagram a skos:Concept ;
+    skos:prefLabel "Network Diagram"@en ;
+    skos:definition "A visualization that represents relationships between entities using nodes and edges."@en ;
+    skos:broader diva:Relationship ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+# Hierarchy
+
+diva:TreeDiagram a skos:Concept ;
+    skos:prefLabel "Tree Diagram"@en ;
+    skos:definition "A visualization that represents hierarchical relationships using a tree structure."@en ;
+    skos:broader diva:Hierarchy ;
+    skos:broader diva:Relationship ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:SunburstDiagram a skos:Concept ;
+    skos:prefLabel "Sunburst Diagram"@en ;
+    skos:definition "A circular visualization that represents hierarchical data using concentric circles."@en ;
+    skos:broader diva:Hierarchy ;
+    skos:broader diva:Proportion ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+diva:CirclePacking a skos:Concept ;
+    skos:prefLabel "Circle Packing"@en ;
+    skos:definition "A visualization technique that uses nested circles to represent hierarchical data."@en ;
+    skos:broader diva:Hierarchy ;
+    skos:broader diva:Proportion ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+
+diva:SankeyDiagram a skos:Concept ;
+    skos:prefLabel "Sankey Diagram"@en ;
+    skos:definition "A flow diagram that represents the flow of resources or data between entities, with the width of the arrows proportional to the flow quantity."@en ;
+    skos:broader diva:Distribution ;
+    skos:broader diva:Movement ;
+    skos:inScheme diva:VisualizationTypeScheme .
+
+
+
+
+# ----- SKOS Concept Scheme for Visualization Marks
+diva:VisualizationMarkScheme a skos:ConceptScheme ;
+    skos:prefLabel "Visualization Mark Types"@en ;
+    skos:definition "A SKOS concept scheme defining common visualization mark types as per Vega-Lite."@en .
+
+# General broader concept for all marks
+diva:Mark a skos:Concept, prov:Entity, diva:Target ;
+    skos:prefLabel "Mark"@en ;
+    skos:definition "A basic graphical primitive used to represent data in a visualization."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+# Specific marks
+diva:Arc a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Arc"@en ;
+    skos:definition "A circular arc mark, often used in pie charts."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Area a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Area"@en ;
+    skos:definition "An area mark that displays quantitative data using filled areas."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Bar a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Bar"@en ;
+    skos:definition "A rectangular bar mark, typically used in bar charts."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:BoxPlot a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Box Plot"@en ;
+    skos:definition "A box plot mark for visualizing distributions with quartiles and outliers."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Circle a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Circle"@en ;
+    skos:definition "A circular mark, often used to represent points."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Geoshape a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Geoshape"@en ;
+    skos:definition "A geographic shape mark for visualizing geographic regions."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Image a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Image"@en ;
+    skos:definition "An image mark for embedding raster images."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Line a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Line"@en ;
+    skos:definition "A line mark for displaying data trends or connections."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Point a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Point"@en ;
+    skos:definition "A point mark, typically representing individual data points."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Rect a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Rect"@en ;
+    skos:definition "A rectangle mark, similar to bar but often used in heatmaps."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Rule a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Rule"@en ;
+    skos:definition "A rule mark used for lines such as axes or reference lines."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Square a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Square"@en ;
+    skos:definition "A square mark used to represent data points."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Text a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Text"@en ;
+    skos:definition "A text mark for displaying labels or annotations."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Tick a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Tick"@en ;
+    skos:definition "A tick mark, often used for axis ticks."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+diva:Trail a skos:Concept ;
+    skos:broader diva:Mark ;
+    skos:prefLabel "Trail"@en ;
+    skos:definition "A trail mark that connects points with lines, emphasizing path or direction."@en ;
+    skos:inScheme diva:VisualizationMarkScheme .
+
+# ----- SKOS Concept Scheme for Encodings -----
+
+### Encoding Scheme
+diva:EncodingScheme a skos:ConceptScheme ;
+    rdfs:label "Vega-Lite Encoding Scheme"@en ;
+    rdfs:comment "A SKOS scheme defining encoding channels used in Vega-Lite visualizations."@en .
+
+diva:EncodingChannel a skos:Concept ;
+    skos:prefLabel "Encoding Channel"@en ;
+    skos:definition "A visual channel used to encode data in a visualization."@en ;
+    skos:inScheme diva:EncodingScheme .
+
+### High-level encoding categories (broader concepts)
+diva:PositionEncoding a skos:Concept ;
+    skos:inScheme diva:EncodingScheme ;
+    skos:broader diva:EncodingChannel ;
+    skos:prefLabel "Position Encoding"@en ;
+    skos:definition "Encoding channels for Cartesian position."@en .
+
+diva:PolarPositionEncoding a skos:Concept ;
+    skos:inScheme diva:EncodingScheme ;
+    skos:broader diva:EncodingChannel ;
+    skos:prefLabel "Polar Position Encoding"@en ;
+    skos:definition "Encoding channels for polar coordinates."@en .
+
+diva:GeographicPositionEncoding a skos:Concept ;
+    skos:inScheme diva:EncodingScheme ;
+    skos:broader diva:EncodingChannel ;
+    skos:prefLabel "Geographic Position Encoding"@en ;
+    skos:definition "Encoding channels for geographic coordinates."@en .
+
+diva:MarkPropertiesEncoding a skos:Concept ;
+    skos:inScheme diva:EncodingScheme ;
+    skos:broader diva:EncodingChannel ;
+    skos:prefLabel "Mark Properties Encoding"@en ;
+    skos:definition "Encoding channels that define mark visual properties."@en .
+
+diva:TextTooltipEncoding a skos:Concept ;
+    skos:inScheme diva:EncodingScheme ;
+    skos:broader diva:EncodingChannel ;
+    skos:prefLabel "Text and Tooltip Encoding"@en ;
+    skos:definition "Encoding channels for text and tooltip information."@en .
+
+diva:OrderEncoding a skos:Concept ;
+    skos:inScheme diva:EncodingScheme ;
+    skos:broader diva:EncodingChannel ;
+    skos:prefLabel "Order Encoding"@en ;
+    skos:definition "Encoding channel for sorting order."@en .
+
+# Position Channels
+diva:X a skos:Concept ;
+    skos:prefLabel "X"@en ;
+    skos:definition "The horizontal position encoding channel for Cartesian coordinates."@en ;
+    skos:broader diva:PositionEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:Y a skos:Concept ;
+    skos:prefLabel "Y"@en ;
+    skos:definition "The vertical position encoding channel for Cartesian coordinates."@en ;
+    skos:broader diva:PositionEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+# Polar Position Channels
+diva:Theta a skos:Concept ;
+    skos:prefLabel "Theta"@en ;
+    skos:definition "The angular position encoding channel for polar coordinates."@en ;
+    skos:broader diva:PolarPositionEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:Radius a skos:Concept ;
+    skos:prefLabel "Radius"@en ;
+    skos:definition "The radial distance encoding channel for polar coordinates."@en ;
+    skos:broader diva:PolarPositionEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+# Geographic Position Channels
+diva:Longitude a skos:Concept ;
+    skos:prefLabel "Longitude"@en ;
+    skos:definition "The geographic longitude encoding channel for spatial data."@en ;
+    skos:broader diva:GeographicPositionEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:Latitude a skos:Concept ;
+    skos:prefLabel "Latitude"@en ;
+    skos:definition "The geographic latitude encoding channel for spatial data."@en ;
+    skos:broader diva:GeographicPositionEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+# Mark Properties Channels
+diva:Color a skos:Concept ;
+    skos:prefLabel "Color"@en ;
+    skos:definition "The color encoding channel for marks in a visualization."@en ;
+    skos:broader diva:MarkPropertiesEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:Opacity a skos:Concept ;
+    skos:prefLabel "Opacity"@en ;
+    skos:definition "The opacity encoding channel for marks in a visualization."@en ;
+    skos:broader diva:MarkPropertiesEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:FillOpacity a skos:Concept ;
+    skos:prefLabel "Fill Opacity"@en ;
+    skos:definition "The fill opacity encoding channel for marks in a visualization."@en ;
+    skos:broader diva:MarkPropertiesEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:StrokeOpacity a skos:Concept ;
+    skos:prefLabel "Stroke Opacity"@en ;
+    skos:definition "The stroke opacity encoding channel for marks in a visualization."@en ;
+    skos:broader diva:MarkPropertiesEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:StrokeWidth a skos:Concept ;
+    skos:prefLabel "Stroke Width"@en ;
+    skos:definition "The stroke width encoding channel for marks in a visualization."@en ;
+    skos:broader diva:MarkPropertiesEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:StrokeDash a skos:Concept ;
+    skos:prefLabel "Stroke Dash"@en ;
+    skos:definition "The stroke dash pattern encoding channel for marks in a visualization."@en ;
+    skos:broader diva:MarkPropertiesEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:Size a skos:Concept ;
+    skos:prefLabel "Size"@en ;
+    skos:definition "The size encoding channel for marks in a visualization."@en ;
+    skos:broader diva:MarkPropertiesEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:Angle a skos:Concept ;
+    skos:prefLabel "Angle"@en ;
+    skos:definition "The angle encoding channel for marks in a visualization."@en ;
+    skos:broader diva:MarkPropertiesEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:Shape a skos:Concept ;
+    skos:prefLabel "Shape"@en ;
+    skos:definition "The shape encoding channel for marks in a visualization."@en ;
+    skos:broader diva:MarkPropertiesEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+# Text and Tooltip Channels
+diva:Text a skos:Concept ;
+    skos:prefLabel "Text"@en ;
+    skos:definition "The text encoding channel for displaying textual information in a visualization."@en ;
+    skos:broader diva:TextTooltipEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+diva:Tooltip a skos:Concept ;
+    skos:prefLabel "Tooltip"@en ;
+    skos:definition "The tooltip encoding channel for providing additional information about a visualization element."@en ;
+    skos:broader diva:TextTooltipEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+# Order Channel
+diva:Order a skos:Concept ;
+    skos:prefLabel "Order"@en ;
+    skos:definition "The order encoding channel for sorting elements in a visualization."@en ;
+    skos:broader diva:OrderEncoding ;
+    skos:inScheme diva:EncodingScheme .
+
+# ---- SKOS Concept Scheme for Scales ----
+# ScaleType scheme
+diva:ScaleTypeScheme a skos:ConceptScheme ;
+    skos:prefLabel "Scale Types"@en ;
+    skos:definition "A scheme of scale types used in Vega-Lite for encoding scales."@en .
+
+# Scale Types (examples)
+diva:LinearScale a skos:Concept ;
+    skos:prefLabel "Linear"@en ;
+    skos:broader diva:ContinuousScale ;
+    skos:inScheme diva:ScaleTypeScheme .
+
+diva:LogScale a skos:Concept ;
+    skos:prefLabel "Log"@en ;
+    skos:broader diva:ContinuousScale ;
+    skos:inScheme diva:ScaleTypeScheme .
+
+diva:OrdinalScale a skos:Concept ;
+    skos:prefLabel "Ordinal"@en ;
+    skos:broader diva:DiscreteScale ;
+    skos:inScheme diva:ScaleTypeScheme .
+
+diva:BandScale a skos:Concept ;
+    skos:prefLabel "Band"@en ;
+    skos:broader diva:DiscreteScale ;
+    skos:inScheme diva:ScaleTypeScheme .
+
+diva:QuantileScale a skos:Concept ;
+    skos:prefLabel "Quantile"@en ;
+    skos:broader diva:DiscretizingScale ;
+    skos:inScheme diva:ScaleTypeScheme .
+
+# Higher-level categories as broader concepts
+diva:ContinuousScale a skos:Concept ;
+    skos:prefLabel "Continuous Scale"@en ;
+    skos:inScheme diva:ScaleTypeScheme .
+
+diva:DiscreteScale a skos:Concept ;
+    skos:prefLabel "Discrete Scale"@en ;
+    skos:inScheme diva:ScaleTypeScheme .
+
+diva:DiscretizingScale a skos:Concept ;
+    skos:prefLabel "Discretizing Scale"@en ;
+    skos:inScheme diva:ScaleTypeScheme .
+
+# ---- SKOS Concept Scheme for Field Types ----
+# Field types defined according to the proposition of Munzner (2015)
+diva:FieldTypeScheme a skos:ConceptScheme ;
+    rdfs:label "Vega-Lite Data Types Scheme"@en ;
+    rdfs:comment "A SKOS scheme defining primary data types used in Vega-Lite visualizations."@en .
+
+diva:FieldType a skos:Concept ;
+    skos:inScheme diva:FieldTypeScheme ;
+    skos:prefLabel "Field Type"@en ;
+    skos:definition "A primary data type used in Vega-Lite visualizations."@en .
+
+diva:Categorical a skos:Concept ;
+    skos:inScheme diva:FieldTypeScheme ;
+    skos:broader diva:FieldType ;
+    skos:prefLabel "Categorical"@en ;
+    skos:definition "Data type for categorical values, which can be nominal or ordinal."@en .
+
+diva:Ordered a skos:Concept ;
+    skos:inScheme diva:FieldTypeScheme ;
+    skos:broader diva:FieldType ;
+    skos:prefLabel "Ordered"@en ;
+    skos:definition "Data type for categorical values with a defined order."@en .
+
+diva:Ordinal a skos:Concept ;
+    skos:inScheme diva:FieldTypeScheme ;
+    skos:broader diva:Ordered ;
+    skos:prefLabel "Ordinal"@en ;
+    skos:definition "Data type for categorical values with a defined order or ranking."@en .
+
+diva:Quantitative a skos:Concept ;
+    skos:inScheme diva:FieldTypeScheme ;
+    skos:broader diva:Ordered ;
+    skos:prefLabel "Quantitative"@en ;
+    skos:definition "Data type for numerical values representing measured quantities."@en .
+
+diva:Temporal a skos:Concept ;
+    skos:inScheme diva:FieldTypeScheme ;
+    skos:broader diva:Ordinal ;
+    skos:prefLabel "Temporal"@en ;
+    skos:definition "Data type for date and time values representing temporal information."@en .
+
+
+### ----- SKOS Concept Scheme for Signals ------
+diva:SignalTypeScheme a skos:ConceptScheme ;
+    rdfs:label "Visualization Signal Scheme"@en ;
+    rdfs:comment "A SKOS scheme defining interactive dynamic signals used to parameterize visualizations."@en .
+
+# Signals are dynamic parameters that can be updated through user interactions
+diva:SignalType a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:prefLabel "Signal"@en ;
+    skos:definition "A dynamic parameter that can be updated through user interactions, affecting the visualization."@en .
+
+diva:VisualizationSignal a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:SignalType ;
+    skos:prefLabel "Visualization Signal"@en ;
+    skos:definition "A signal that affects visual aspects of the visualization, such as layout or style."@en .
+
+diva:InteractionSignal a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:SignalType ;
+    skos:prefLabel "Interaction Signal"@en ;
+    skos:definition "A signal that controls interaction aspects, such as user behavior, tool availability, or interaction toggles."@en .
+
+diva:UnknownSignal a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:SignalType ;
+    skos:prefLabel "Unknown Signal"@en ;
+    skos:definition "A placeholder for signals that do not fit into any known category."@en .
+
+## Signals as Concepts
+diva:Gravity a skos:Concept ;
+    skos:broader diva:VisualizationSignal ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:prefLabel "Gravity"@en ;
+    skos:definition "The gravity factor for graph layouts, affecting how nodes are pulled towards the center."@en .
+
+diva:Repulsion a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:VisualizationSignal ;
+    skos:prefLabel "Repulsion"@en ;
+    skos:definition "The repulsion factor for graph layouts, affecting how nodes are pulled away from each other."@en .
+
+diva:LinkDistance a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:VisualizationSignal ;
+    skos:prefLabel "Link Distance"@en ;
+    skos:definition "The distance between linked nodes in a graph visualization."@en .
+
+diva:Display a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:VisualizationSignal ;
+    skos:prefLabel "Is Displayed"@en ;
+    skos:definition "A setting indicating whether the visualization is displayed (e.g., in a dashboard view)."@en .
+
+diva:TimeGranularity a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:VisualizationSignal ;
+    skos:prefLabel "Time Granularity"@en ;
+    skos:definition "The granularity of time in a time-based visualization, such as seconds, minutes, or hours."@en .
+
+diva:SpaceGranularity a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:VisualizationSignal ;
+    skos:prefLabel "Space Granularity"@en ;
+    skos:definition "The granularity of space in a spatial visualization, such as city, state, or country."@en .
+
+diva:Quantification a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:VisualizationSignal ;
+    skos:prefLabel "Quantification"@en ;
+    skos:definition "The expression or representation of a measurable amount of data, such as a count (absolute number) or a ratio (relative measure)."@en .
+
+
+diva:EnableTimeAnimation a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:InteractionSignal ;
+    skos:prefLabel "Time Animation"@en ;
+    skos:definition "A signal controlling the animation of time-based visualizations."@en .
+
+diva:EnableZoom a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:InteractionSignal ;
+    skos:prefLabel "Freeze Zoom"@en ;
+    skos:definition "A signal that allows users to freeze the zoom level of a visualization."@en .
+
+diva:EnableSpaceLinking a skos:Concept ;
+    skos:inScheme diva:SignalTypeScheme ;
+    skos:broader diva:InteractionSignal ;
+    skos:prefLabel "Spatial Animation"@en ;
+    skos:definition "A signal controlling the animation of spatial visualizations, such as maps."@en .
+    
+
+
+#### ------------------------------------------------
+#### ----- Interaction ------------------------------
+# Classes
+
+# An interaction is a sub-class of prov:Activity 
+# Uses prov:startedAtTime from the PROV ontology to link the interaction to the time it started
+# Uses prov:endedAtTime from the PROV ontology to link the interaction to the time it ended
+# Uses prov:wasAssociatedWith from the PROV ontology to link the interaction to the user who created it
+diva:Interaction a rdfs:Class ;
+    rdfs:subClassOf prov:Activity ;
+    rdfs:label "User Interaction"@en ;
+    rdfs:comment "A user interaction with a visualization, such as clicking, hovering, or dragging."@en .
+
+diva:UnknownInteraction a rdfs:Class ;
+    rdfs:subClassOf diva:Interaction ;
+    rdfs:label "Unknown Interaction"@en ;
+    rdfs:comment "An interaction that does not fit into any specific category."@en .
+diva:Item a rdfs:Class ;
+    rdfs:label "Item" ;
+    rdfs:comment "A resource representing an item annotated in the document." .
+## Properties
+diva:HasPageUrl a rdf:Property ;
+    rdfs:domain diva:Item ;
+    rdfs:range rdfs:Resource ;
+    rdfs:label "Has Page URL" ;
+    rdfs:comment "Links the item to a web page where it is described or used." .
+
+diva:type a rdf:Property ;
+    rdfs:domain diva:Item ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "Type" ;
+    rdfs:comment "Specifies the type of the item (e.g., text, image, etc.)." .
+
+diva:value a rdf:Property ;
+    rdfs:domain diva:Item ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "Value" ;
+    rdfs:comment "The textual or literal value of the item content." .
+
+diva:hasInteractionTarget a rdf:Property ;
+    rdfs:subPropertyOf prov:used ;
+    rdfs:domain diva:Interaction ;
+    rdfs:range diva:Target ;
+    rdfs:label "Target"@en ;
+    rdfs:comment "The target of the interaction, i.e., the visual element from the visualization being interacted with."@en .
+
+diva:hasDataRecord a rdf:Property ;
+    rdfs:domain diva:Interaction ;
+    rdfs:range diva:DataRecord ;
+    rdfs:label "Data Record"@en ;
+    rdfs:comment "The data record corresponding to the visual mark of the interaction, when data is binded."@en .
+
+diva:hasPositionX a rdf:Property ;
+    rdfs:domain diva:Interaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Interaction X Position"@en ;
+    rdfs:comment "Position of the interaction on the X-axis for all interaction types."@en .
+
+diva:hasPositionY a rdf:Property ;
+    rdfs:domain diva:Interaction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "Interaction Y Position"@en ;
+    rdfs:comment "Position of the interaction on the Y-axis for all interaction types."@en .
+
+# Property for events
+diva:hasEvent a rdf:Property ;
+    rdfs:domain diva:Interaction ;
+    rdfs:range diva:Event ;
+    rdfs:label "Interaction Event"@en ;
+    rdfs:comment "The event type that triggered the interaction, such as click, hover, drag. Values are SKOS concepts categorized under diva:Event."@en .
+
+# Property for actions
+diva:hasAction a rdf:Property ;
+    rdfs:domain diva:Interaction ;
+    rdfs:range diva:Action ;
+    rdfs:label "Interaction Action"@en ;
+    rdfs:comment "The action performed during the interaction, such as zoom, pan, filter. Values are SKOS concepts categorized under diva:Action."@en .
+
+# Property for sub-tasks
+diva:hasSubTask a rdf:Property ;
+    rdfs:domain diva:Interaction ;
+    rdfs:range diva:SubTask ;
+    rdfs:label "Interaction Sub-task"@en ;
+    rdfs:comment "The cognitive sub-task involved in the interaction, such as identify, search, lookup. Values are SKOS concepts categorized under diva:SubTask."@en .
+
+diva:interactsWithVisualization a rdf:Property ;
+    rdfs:domain diva:Interaction ;
+    rdfs:range diva:Visualization ;
+    rdfs:label "Interacts With Visualization"@en ;
+    rdfs:comment "Links an interaction to the visualization it interacts with."@en .
+
+# ------ SKOS Concepts for Interaction ------
+# Use SKOS to define the types of views, marks, channels, and encodings
+
+### --- SKOS Concept Scheme for Interaction types ---
+
+diva:InteractionScheme a skos:ConceptScheme ;
+    skos:prefLabel "Interaction Types"@en ;
+    skos:note "Types of interactions with visualizations, categorized as events, actions, or sub-tasks."@en .
+
+#### Top-level categories
+
+diva:Event a skos:Concept ;
+    skos:prefLabel "Event"@en ;
+    skos:definition "User-triggered events such as clicks or mouseovers."@en ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Action a skos:Concept ;
+    skos:prefLabel "Action"@en ;
+    skos:definition "User actions that manipulate or interact with the visualization."@en ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:SubTask a skos:Concept ;
+    skos:prefLabel "Sub-task"@en ;
+    skos:definition "User cognitive sub-tasks or goals during interaction (e.g., identify, search)."@en ;
+    skos:inScheme diva:InteractionScheme .
+
+# diva:Unknown a skos:Concept ;
+#     skos:prefLabel "Unknown Interaction"@en ;
+#     skos:definition "An interaction that does not fit into any specific category."@en ;
+#     skos:inScheme diva:InteractionScheme .
+
+#### Specific interaction concepts
+
+### Events
+# Events are user-triggered actions that do not change the state of the visualization but may provide information or trigger other actions.
+diva:ContextMenu a skos:Concept ;
+    skos:prefLabel "Context Menu"@en ;
+    skos:definition "User attempts to open a context menu, typically by right-click or keyboard."@en ;
+    skos:broader diva:Event ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Click a skos:Concept ;
+    skos:prefLabel "Click"@en ;
+    skos:definition "User clicks on a visualization element."@en ;
+    skos:broader diva:Event ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Hover a skos:Concept ;
+    skos:prefLabel "Hover"@en ;
+    skos:definition "User hovers over a visualization element."@en ;
+    skos:broader diva:Event ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:DoubleClick a skos:Concept ;
+    skos:prefLabel "Double Click"@en ;
+    skos:definition "User double-clicks on a visualization element."@en ;
+    skos:broader diva:Event ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:MouseMove a skos:Concept ;
+    skos:prefLabel "Mouse Move"@en ;
+    skos:definition "User moves the mouse within the visualization area."@en ;
+    skos:broader diva:Event ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:KeyDown a skos:Concept ;
+    skos:prefLabel "Key Down"@en ;
+    skos:definition "User presses a key on the keyboard."@en ;
+    skos:broader diva:Event ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Drag a skos:Concept ;
+    skos:prefLabel "Drag"@en ;
+    skos:definition "User drags a visualization element."@en ;
+    skos:broader diva:Event ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Drop a skos:Concept ;
+    skos:prefLabel "Drop"@en ;
+    skos:definition "User drops a visualization element."@en ;
+    skos:broader diva:Event ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Scroll a skos:Concept ;
+    skos:prefLabel "Scroll"@en ;
+    skos:definition "User scrolls the visualization."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+
+
+### Actions
+## Actions are analytical steps that the user can perform on the visualization (K. Xu, S. Attfield, T. J. Jankun-Kelly, A. Wheat, P. H. Nguyen and N. Selvaraj, "Analytic Provenance for Sensemaking: A Research Agenda," in IEEE Computer Graphics and Applications, vol. 35, no. 3, pp. 56-64, May-June 2015, doi: 10.1109/MCG.2015.50.). The classification of actions is based on the work of Munzner (2015), including actions that manipulate the visualization, change its state, or provide additional information.
+
+diva:TimeAnimation a skos:Concept ;
+    skos:prefLabel "Time Animation"@en ;
+    skos:definition "User animates a visualization element over time."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+
+
+
+diva:Zoom a skos:Concept ;
+    skos:prefLabel "Zoom"@en ;
+    skos:definition "User zooms in or out of a visualization."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Pan a skos:Concept ;
+    skos:prefLabel "Pan"@en ;
+    skos:definition "User pans the visualization."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Select a skos:Concept ;
+    skos:prefLabel "Select"@en ;
+    skos:definition "User selects a visualization element."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Unselect a skos:Concept ;
+    skos:prefLabel "Unselect"@en ;
+    skos:definition "User unselects a visualization element."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Tooltip a skos:Concept ;
+    skos:prefLabel "Tooltip"@en ;
+    skos:definition "Provides additional information regarding a particular element."@en ;
+    skos:broader diva:Event ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Highlight a skos:Concept ;
+    skos:prefLabel "Highlight"@en ;
+    skos:definition "User highlights a visualization element."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Focus a skos:Concept ;
+    skos:prefLabel "Focus"@en ;
+    skos:definition "User focuses on a specific part of the visualization."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:BrushingAndLinking a skos:Concept ;
+    skos:prefLabel "Brushing and Linking"@en ;
+    skos:definition "A change to the representation in one view affects the representation in the other."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Create a skos:Concept ;
+    skos:prefLabel "Create"@en ;
+    skos:definition "Create a new visualization element in the dashboard."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Delete a skos:Concept ;
+    skos:prefLabel "Delete"@en ;
+    skos:definition "Delete a visualization element from the dashboard."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:DataLoading a skos:Concept ;
+    skos:prefLabel "Load Data"@en ;
+    skos:definition "User loads data into the visualization."@en ;
+    skos:broader diva:Action ;
+    skos:inScheme diva:InteractionScheme .
+
+
+
+# diva:SpaceLinking a skos:Concept ;
+#     skos:prefLabel "Space Animation"@en ;
+#     skos:definition "User animates a visualization element in space."@en ;
+#     skos:broader diva:Action ;
+#     skos:broader diva:ConfigOptionConcept ;
+#     skos:inScheme diva:InteractionScheme .
+
+### Sub-tasks
+## Subtasks extracted from Munzner, T. (2014). Visualization Analysis and Design (0 ed.). A K Peters/CRC Press. https://doi.org/10.1201/b17511
+
+
+diva:Query a skos:Concept ;
+    skos:prefLabel "Query"@en ;
+    skos:definition "Once a target or set of targets for a search has been found, the user queries these targets to learn more information (details-on-demand)."@en ;
+    skos:broader diva:SubTask ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Identify a skos:Concept ;
+    skos:prefLabel "Identify"@en ;
+    skos:definition "User query the characteristics of one or multiple targets."@en ;
+    skos:broader diva:SubTask ;
+    skos:broader diva:Query ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Compare a skos:Concept ;   
+    skos:prefLabel "Compare"@en ;
+    skos:definition "User compares two or more targets."@en ;
+    skos:broader diva:SubTask ;
+    skos:broader diva:Query ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Summarize a skos:Concept ;
+    skos:prefLabel "Summarize"@en ;
+    skos:definition "User obtains a comprehensive view of everything."@en ;
+    skos:broader diva:SubTask ;
+    skos:broader diva:Query ;
+    skos:inScheme diva:InteractionScheme .
+
+
+## Produce tasks
+diva:Produce a skos:Concept ;
+    skos:prefLabel "Produce"@en ;
+    skos:definition "User produces new visualizations or new data."@en ;
+    skos:broader diva:SubTask ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Transform a skos:Concept ;
+    skos:prefLabel "Transform Interaction"@en ;
+    skos:definition "User applies a transformation to the data, such as filtering or aggregating."@en ;
+    skos:broader diva:SubTask ;
+    skos:broader diva:Produce ;
+    skos:exactMatch diva:TransformFunction ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Annotate a skos:Concept ;
+    skos:prefLabel "Annotate"@en ;
+    skos:definition "User creates an annotation on a visualization."@en ;
+    skos:broader diva:SubTask ;
+    skos:broader diva:Produce ;
+    skos:exactMatch diva:Annotation ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Record a skos:Concept ;
+    skos:prefLabel "Record"@en ;
+    skos:definition "User captures the current state of the visualization as a persistent artifact."@en ;
+    skos:broader diva:SubTask ;
+    skos:broader diva:Produce ;
+    skos:inScheme diva:InteractionScheme .
+
+
+## Search tasks
+# Search tasks are broken down into four sub-tasks according to whether the user knows what they are looking for and where it is located
+diva:Search a skos:Concept ;
+    skos:prefLabel "Search"@en ;
+    skos:definition "User searches for data or elements in the visualization."@en ;
+    skos:broader diva:SubTask ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Explore a skos:Concept ;
+    skos:prefLabel "Explore"@en ;
+    skos:definition "Users explore the data to find an unknown target in an unknown location. It entails searching for characteristics without regard to their location."@en ;
+    skos:broader diva:SubTask ;
+    skos:broader diva:Search;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Lookup a skos:Concept ;
+    skos:prefLabel "Lookup"@en ;
+    skos:definition "User knows both what they're looking for and where."@en ;
+    skos:broader diva:SubTask ;
+    skos:broader diva:Search ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Locate a skos:Concept ;
+    skos:prefLabel "Locate"@en ;
+    skos:definition "User locates a specific data point or element in the visualization. The subtasks requires finding a known target in an unknown location."@en ;
+    skos:broader diva:SubTask ;
+    skos:broader diva:Search ;
+    skos:inScheme diva:InteractionScheme .
+
+diva:Browse a skos:Concept ;
+    skos:prefLabel "Browse"@en ;
+    skos:definition "User browses through the visualization searching for one or more items that fit some kind of specification. It entails looking for an unknown target in a known location."@en ;
+    skos:broader diva:SubTask ;
+    skos:broader diva:Search ;
+    skos:inScheme diva:InteractionScheme .
+
+# ---- Transform functions ----
+# Use diva:Transform as the base class for all transform functions
+# The concepts below help to specify the types of transform functions used in data visualizations, such as aggregations, filters, and other transformations.
+# Use prov:wasInformedBy to link the transform function to the interaction that triggered it
+# Use prov:used to link the transform function to the data it operates on
+
+# Define the superclass
+diva:TransformFunction a rdfs:Class ;
+    rdfs:subClassOf prov:Activity ;
+    rdfs:label "Transform Function"@en ;
+    rdfs:comment "Common transform functions used in data visualizations."@en .
+
+# Aggregate and Filter as subclasses of TransformFunction
+diva:Aggregate a rdfs:Class ;
+    rdfs:label "Aggregate"@en ;
+    rdfs:comment "A function that aggregates data, such as sum, average, count."@en ;
+    rdfs:subClassOf diva:TransformFunction .
+
+diva:Filter a rdfs:Class ;
+    rdfs:label "Filter"@en ;
+    rdfs:comment "A function that filters data based on a condition."@en ;
+    rdfs:subClassOf diva:TransformFunction .
+
+diva:Sort a rdfs:Class ;
+    rdfs:label "Sort"@en ;
+    rdfs:comment "A function that orders data based on a field or value."@en ;
+    rdfs:subClassOf diva:TransformFunction .
+
+diva:Limit a rdfs:Class ;
+    rdfs:label "Limit"@en ;
+    rdfs:comment "A function that limits the number of returned data records."@en ;
+    rdfs:subClassOf diva:TransformFunction .
+
+diva:Group a rdfs:Class ;
+    rdfs:label "Group"@en ;
+    rdfs:comment "A function that groups data records by shared attribute values."@en ;
+    rdfs:subClassOf diva:TransformFunction .
+
+diva:Join a rdfs:Class ;
+    rdfs:label "Join"@en ;
+    rdfs:comment "A function that combines records from two data sources."@en ;
+    rdfs:subClassOf diva:TransformFunction .
+
+diva:Sample a rdfs:Class ;
+    rdfs:label "Sample"@en ;
+    rdfs:comment "A function that returns a subset of data, randomly or systematically."@en ;
+    rdfs:subClassOf diva:TransformFunction .
+
+# Aggregate functions as subclasses of Aggregate
+diva:Count a rdfs:Class ;
+    rdfs:label "Count"@en ;
+    rdfs:comment "The total count of data objects in the group."@en ;
+    rdfs:subClassOf diva:Aggregate .
+
+diva:Sum a rdfs:Class ;
+    rdfs:label "Sum"@en ;
+    rdfs:comment "The sum of field values."@en ;
+    rdfs:subClassOf diva:Aggregate .
+
+diva:Average a rdfs:Class ;
+    rdfs:label "Average"@en ;
+    rdfs:comment "The average of field values."@en ;
+    rdfs:subClassOf diva:Aggregate .
+
+diva:Proportion a rdfs:Class ;
+    rdfs:label "Proportion"@en ;
+    rdfs:comment "The proportion of a field value relative to the total."@en ;
+    rdfs:subClassOf diva:Aggregate .
+
+
+# Transform properties
+
+diva:hasTransformField a rdf:Property ;
+    rdfs:domain diva:TransformFunction ;
+    rdfs:range diva:Field ;
+    rdfs:label "Transform Field"@en ;
+    rdfs:comment "Links a transform function to the field it operates on."@en .
+
+diva:hasJoinedDataSource a rdf:Property ;
+    rdfs:domain diva:Join ;
+    rdfs:range diva:DataSource ;
+    rdfs:label "Joined Data Source"@en ;
+    rdfs:comment "Links a join function to the data source it joins with."@en .
+
+diva:hasGroupField a rdf:Property ;
+    rdfs:domain diva:Group ;
+    rdfs:range diva:Field ;
+    rdfs:label "Group Field"@en ;
+    rdfs:comment "Links a group function to the field it groups by."@en .
+
+diva:hasLimitValue a rdf:Property ;
+    rdfs:domain diva:Limit ;
+    rdfs:range xsd:integer ;
+    rdfs:label "Limit Value"@en ;
+    rdfs:comment "Defines the maximum number of records to return from a limit function."@en .
+
+diva:hasSampleSize a rdf:Property ;
+    rdfs:domain diva:Sample ;
+    rdfs:range xsd:integer ;
+    rdfs:label "Sample Size"@en ;
+    rdfs:comment "Defines the size of the sample to return from a sample function."@en .
+
+diva:hasSortOrder a rdf:Property ;
+    rdfs:domain diva:Sort ;
+    rdfs:range diva:SortOrder ;
+    rdfs:label "Sort Order"@en ;
+    rdfs:comment "Defines the sort order for a transform function, such as ascending or descending."@en .
+
+# SKOS Concepts to describe Sort function
+diva:SortOrderScheme a skos:ConceptScheme ;
+    skos:prefLabel "Sort Order Scheme"@en ;
+    skos:note "Defines the valid sort directions (ascending or descending)."@en .
+
+diva:SortOrder a skos:Concept ;
+    skos:prefLabel "Sort Order"@en ;
+    skos:definition "The direction in which sorting is performed."@en ;
+    skos:inScheme diva:SortOrderScheme .
+
+# -- Sort oder subtypes
+diva:Ascending a skos:Concept ;
+    skos:prefLabel "Ascending"@en ;
+    skos:definition "Sort in increasing order."@en ;
+    skos:broader diva:SortOrder ;
+    skos:inScheme diva:SortOrderScheme .
+
+diva:Descending a skos:Concept ;
+    skos:prefLabel "Descending"@en ;
+    skos:definition "Sort in decreasing order."@en ;
+    skos:broader diva:SortOrder ;
+    skos:inScheme diva:SortOrderScheme .
+
+diva:Alphabetically a skos:Concept ;
+    skos:prefLabel "Alphabetically"@en ;
+    skos:definition "Sort in alphabetical order."@en ;
+    skos:broader diva:SortOrder ;
+    skos:inScheme diva:SortOrderScheme .
+
+
+# ----- Annotations (for capturing user intentions and insights) -----
+# Class
+# Uses oa:hasBody from the Open Annotation ontology to link the annotation to the content (text, image, etc.) that is being annotated
+# Uses prov:wasAttributedTo from the PROV ontology to link the annotation to the user who created it
+# Uses prov:wasGeneratedBy from the PROV ontology to link the annotation to the interaction that generated it
+
+diva:Annotation a rdfs:Class ;
+    rdfs:subClassOf oa:Annotation, diva:Target, prov:Entity ;
+    rdfs:label "Visualization Annotation"@en ;
+    rdfs:comment "An annotation applied to a visualization to capture user insights, feedback, or other information."@en .
+
+# utiliser oa:hasTarget from the Open Annotation ontology to link the annotation to the target of the annotation
+diva:hasAnnotationTarget a rdf:Property ;
+    rdfs:domain oa:Annotation ;
+    rdfs:range diva:Target ;
+    rdfs:label "Annotation Target"@en ;
+    rdfs:comment "The target of the annotation, i.e., the visual element or data record being annotated."@en .
+
+# utiliser dcterms:creator from the DCTerms ontology to link the annotation to the user who created it
+diva:hasAnnotationCreator a rdf:Property ;
+    rdfs:domain oa:Annotation ;
+    rdfs:range diva:User ;
+    rdfs:label "Annotation Creator"@en ;
+    rdfs:comment "The user or agent who created the annotation."@en .
+
+diva:hasAnnotationType a rdf:Property ;
+    rdfs:domain oa:Annotation ;
+    rdfs:range skos:Concept ;
+    rdfs:label "Annotation Type"@en ;
+    rdfs:comment "The type of the annotation, such as 'comment', 'highlight', 'note', etc."@en .
+
+diva:hasAnnotationIntention a rdf:Property ;
+    rdfs:domain oa:Annotation ;
+    rdfs:range skos:Concept ;
+    rdfs:label "Annotation Intention"@en ;
+    rdfs:comment "The intention behind the annotation, such as 'insight', 'feedback', 'error', etc."@en .
+
+## ---- SKOS Concept Scheme for Annotations ----
+
+
+## -- Annotation Intention Scheme
+diva:AnnotationIntentionScheme a skos:ConceptScheme ;
+    skos:prefLabel "Annotation Intentions"@en ;
+    skos:note "Intentions behind annotations applied to visualizations."@en .
+
+diva:Insight a skos:Concept ;
+    skos:prefLabel "Insight"@en ;
+    skos:definition "An insight derived from the visualization, captured as an annotation."@en ;
+    skos:inScheme diva:AnnotationIntentionScheme .
+
+diva:Feedback a skos:Concept ;
+    skos:prefLabel "Feedback"@en ;
+    skos:definition "Feedback provided by users regarding the visualization."@en ;
+    skos:inScheme diva:AnnotationIntentionScheme .
+
+diva:Error a skos:Concept ;
+    skos:prefLabel "Error"@en ;
+    skos:definition "An error or issue identified in the visualization."@en ;
+    skos:inScheme diva:AnnotationIntentionScheme .
+
+diva:Question a skos:Concept ;
+    skos:prefLabel "Question"@en ;
+    skos:definition "A question raised by users regarding the visualization."@en ;
+    skos:inScheme diva:AnnotationIntentionScheme .
+
+diva:Clarification a skos:Concept ;
+    skos:prefLabel "Clarification"@en ;
+    skos:definition "A request for clarification regarding the visualization."@en ;
+    skos:inScheme diva:AnnotationIntentionScheme .
+
+diva:Comment a skos:Concept ;
+    skos:prefLabel "Comment"@en ;
+    skos:definition "A comment annotation that provides additional information or feedback."@en ;
+    skos:inScheme diva:AnnotationIntentionScheme .
+
+
+## -- Annotation Type Scheme
+diva:AnnotationTypeScheme a skos:ConceptScheme ;
+    skos:prefLabel "Annotation Types"@en ;
+    skos:note "Types of annotations that can be applied to visualizations."@en .
+
+diva:TextAnnotation a skos:Concept ;
+    skos:prefLabel "Text"@en ;
+    skos:definition "A text annotation that includes a textual comment or note."@en ;
+    skos:inScheme diva:AnnotationTypeScheme .
+
+diva:HighlightAnnotation a skos:Concept ;
+    skos:prefLabel "Highlight"@en ;
+    skos:definition "A highlight annotation that emphasizes a specific part of the visualization."@en ;
+    skos:inScheme diva:AnnotationTypeScheme .
+
+diva:LinkAnnotation a skos:Concept ;
+    skos:prefLabel "Link"@en ;
+    skos:definition "A link annotation that connects to external resources or references."@en ;
+    skos:inScheme diva:AnnotationTypeScheme .
+
+diva:ImageAnnotation a skos:Concept ;
+    skos:prefLabel "Image"@en ;
+    skos:definition "An image annotation that includes an image as part of the annotation."@en ;
+    skos:inScheme diva:AnnotationTypeScheme .
+
+diva:VideoAnnotation a skos:Concept ;   
+    skos:prefLabel "Video"@en ;
+    skos:definition "A video annotation that includes a video as part of the annotation."@en ;
+    skos:inScheme diva:AnnotationTypeScheme .
+
+diva:AudioAnnotation a skos:Concept ;
+    skos:prefLabel "Audio"@en ;
+    skos:definition "An audio annotation that includes an audio clip as part of the annotation."@en ;
+    skos:inScheme diva:AnnotationTypeScheme .
+
+
+## use as an example to define DIVA ontology
+# oa: a owl:Ontology ;
+#     dc:title "Web Annotation Ontology" ;
+#     dcterms:creator [a foaf:Person; foaf:name "Benjamin Young"],
+#         [a foaf:Person; foaf:name "Paolo Ciccarese"],
+#         [a foaf:Person; foaf:name "Robert Sanderson"] ;
+#     dcterms:modified "2016-11-12T21:28:11Z" ;
+#     rdfs:comment "The Web Annotation ontology defines the terms of the Web Annotation vocabulary. Any changes to this document MUST be from a Working Group in the W3C that has established expertise in the area." ;
+#     rdfs:seeAlso <http://www.w3.org/TR/annotation-vocab/> ;
+#     prov:wasRevisionOf <http://www.openannotation.org/spec/core/20130208/oa.owl> ;
+#     owl:versionInfo "2016-11-12T21:28:11Z" .

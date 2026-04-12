@@ -1,0 +1,80 @@
+.configuration-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 50vh;
+  background-color: #f5f5f5;
+}
+
+.configuration-form {
+  width: 90%;
+  max-width: 400px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 16px;
+}
+
+.configuration-form input {
+  width: 90%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.error-message {
+  color: #d9534f;
+  margin-bottom: 15px;
+}
+
+.auth-button,
+.toggle-button,
+.reset-button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.auth-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.auth-button:hover {
+  background-color: #0056b3;
+}
+
+.toggle-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.toggle-button:hover {
+  background-color: #5a6268;
+}
+
+.reset-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.reset-button:hover {
+  background-color: #218838;
+}

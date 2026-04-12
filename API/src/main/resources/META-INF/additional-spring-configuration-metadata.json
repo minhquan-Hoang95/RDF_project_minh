@@ -1,0 +1,29 @@
+{
+    "properties": [
+        {
+            "name": "cors.allowed.origins",
+            "type": "java.lang.String",
+            "description": "Interface to configure CORS settings for the application (change with your interface URL)."
+        },
+        {
+            "name": "uri.authorized",
+            "type": "java.lang.String",
+            "description": "'uri.authorized' to bypass the authentication process."
+        },
+        {
+            "name": "jwt.secret",
+            "type": "java.lang.String",
+            "description": "A description for 'jwt.secret'"
+        },
+        {
+            "name": "jwt.expiration",
+            "type": "java.lang.String",
+            "description": "A description for 'jwt.expiration'"
+        },
+        {
+            "name": "api.base.url",
+            "type": "java.lang.String",
+            "description": "A description for 'api.base.url'"
+        }
+    ]
+}

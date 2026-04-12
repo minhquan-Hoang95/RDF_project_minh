@@ -1,0 +1,164 @@
+/* Base styles */
+body,
+.App {
+  font-family: "Arial", sans-serif;
+  background-color: #ffffff;
+  color: #34495e;
+  margin: 0;
+  padding: 10px;
+}
+
+/* Header styles */
+.App-header {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.content-annotator-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.return-icon,
+.view-annotations-icon {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.return-icon:hover,
+.view-annotations-icon:hover {
+  background-color: #2980b9;
+}
+
+/* Form and control styles */
+.annotation-form,
+.form-control,
+textarea {
+  width: 100%;
+  border: 1px solid #dadfe1;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.annotation-form label {
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.form-control:focus,
+textarea:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+.submit-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.submit-button:hover {
+  background-color: #256997;
+}
+
+/* Annotations display */
+.annotations-display {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  width: 340px;
+  height: 400px;
+  overflow-y: auto;
+}
+
+.annotations-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.annotation-item:not(:last-child) {
+  margin-bottom: 15px;
+}
+
+.close-button {
+  background-color: #575757fb;
+  color: white;
+  border: 1;
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: #c0392b;
+}
+
+/* Additional styles for react-select */
+.css-2b097c-container {
+  margin: 8px 0;
+}
+
+.css-yk16xz-control {
+  border-radius: 4px;
+}
+
+.css-1pahdxg-control {
+  border-color: #3498db !important;
+}
+
+.css-1okebmr-indicatorSeparator {
+  display: none;
+}
+
+/* Concept tags styling */
+.selected-contexts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.selected-context {
+  background-color: #3498db;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.remove-context {
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+}

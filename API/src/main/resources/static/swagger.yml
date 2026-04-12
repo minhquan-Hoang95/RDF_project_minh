@@ -1,0 +1,860 @@
+openapi: 3.0.0
+
+info:
+  title: PIR RDF plugin project API
+  description: API documentation for the PIR RDF plugin project.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3001
+    description: Local development server
+
+tags:
+  - name: Hello
+    description: Hello World! for test API
+  - name: Auth
+    description: Authentication
+  - name: User
+    description: Operations about user
+  - name: RDF
+    description: Operations about RDF
+  - name: Plugin
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        selectedThesauri:
+          type: array
+          items:
+            type: string
+        date:
+          type: string
+          format: date-time
+        creator:
+          type: object
+          properties:
+            email:
+              type: string
+        participants:
+          type: array
+          items:
+            type: object
+            properties:
+              email:
+                type: string
+        invitations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Invitation"
+        annotations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Annotation"
+    Invitation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        user:
+          type: object
+          properties:
+            email:
+              type: string
+    Annotation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        description:
+          type: string
+        annotationType:
+          type: string
+        pageUrl:
+          type: string
+        turtlePath:
+          type: string
+        item:
+          $ref: "#/components/schemas/Item"
+        concepts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Concept"
+        campaign:
+          type: object
+          properties:
+            name:
+              type: string
+        creator:
+          type: object
+          properties:
+            email:
+              type: string
+    Item:
+      type: object
+      properties:
+        type:
+          type: string
+        value:
+          type: string
+    Concept:
+      type: object
+      properties:
+        value:
+          type: string
+        uri:
+          type: string
+
+security:
+  - bearerAuth: []
+
+paths:
+  /hello:
+    get:
+      tags:
+        - Hello
+      summary: Returns a greeting message (Hello World!)
+      operationId: helloWorld
+      responses:
+        "200":
+          description: Successful response
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Hello World!
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: An error occurred
+  /api/hello:
+    get:
+      tags:
+        - Hello
+      summary: Returns a greeting message (Hello World!)
+      operationId: helloWorld
+      responses:
+        "200":
+          description: Successful response
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Hello World!
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: An error occurred
+
+  /api/auth/validate:
+    get:
+      tags:
+        - Auth
+      summary: Validates a user account
+      operationId: validateAccount
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Account validated successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Account validated.
+        "400":
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Verification code expired. | Incorrect verification code.
+        "404":
+          description: User not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Incorrect email.
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+
+  /api/auth:
+    post:
+      tags:
+        - Auth
+      summary: Create a new user account
+      operationId: signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Verification code sent to email.
+        "400":
+          description: Bad request - email issue or other validation errors
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Not possible to send email to this email address. | Incorrect email.
+        "409":
+          description: Conflict - duplicate key
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Duplicate key email. | Data integrity violation.
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Mail dispatch service currently offline. | Oops, error. Please contact an administrator.
+    get:
+      tags:
+        - Auth
+      summary: Login to user account
+      operationId: login
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Login successful
+          content:
+            text/plain:
+              schema:
+                type: string
+                example:
+                  {
+                    "firstName": "<firstName>",
+                    "lastName": "<lastName>",
+                    "role": "<role>",
+                    "id": <id>,
+                    "token": "<token>",
+                  }
+        "403":
+          description: Forbidden - bad credentials or account issue
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Bad credentials
+        "404":
+          description: User not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Incorrect email.
+        "400":
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Account locked.
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+    patch:
+      tags:
+        - Auth
+      summary: Request password reset
+      operationId: passwordForgotten
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Password reset requested successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Verification code sent to email.
+        "404":
+          description: User not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Incorrect email.
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+    put:
+      tags:
+        - Auth
+      summary: Set new password
+      operationId: newPassword
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Password changed successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Password changed.
+        "404":
+          description: User not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Incorrect email.
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+
+  /api/user:
+    get:
+      tags:
+        - User
+      summary: Get all users
+      operationId: getUsers
+      responses:
+        "200":
+          description: List of users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "403":
+          description: Forbidden - user not authorized
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Permission denied. Disappear !
+
+  /api/campaign:
+    post:
+      tags:
+        - RDF
+      summary: Create a new campaign
+      operationId: createCampaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                selectedThesauri:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - name
+                - selectedThesauri
+      responses:
+        "201":
+          description: Campaign created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+        "409":
+          description: Conflict - duplicate campaign name
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Duplicate key name. | Data integrity violation.
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+    get:
+      tags:
+        - RDF
+      summary: Get campaign by ID
+      operationId: getCampaignById
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Campaign retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+        "403":
+          description: Forbidden - user not authorized
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: UserNotAuthorized
+        "404":
+          description: Campaign not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: CampaignNotFound
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+
+  /api/campaign/all:
+    get:
+      tags:
+        - RDF
+      summary: Get all campaigns for current user
+      operationId: getAllCampaignsByUser
+      responses:
+        "200":
+          description: Campaigns retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Campaign"
+        "404":
+          description: No campaigns found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: CampaignsNotFound
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+
+  /api/campaign/invite:
+    post:
+      tags:
+        - RDF
+      summary: Invite a participant to a campaign
+      operationId: inviteParticipant
+      parameters:
+        - name: campaignId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: participantEmail
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Participant invited successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+        "403":
+          description: Forbidden - user not authorized
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: UserNotAuthorized
+        "409":
+          description: Conflict - participant already invited
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Participant already invited.
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+
+  /api/campaign/accept:
+    get:
+      tags:
+        - RDF
+      summary: Accept an invitation to a campaign
+      operationId: acceptInvitation
+      parameters:
+        - name: participantEmail
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: campaignName
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Invitation accepted successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Invitation accepted.
+        "404":
+          description: Campaign not found / participant not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: CampaignNotFound | Incorrect email.
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+
+  /api/campaign/export:
+    get:
+      tags:
+        - RDF
+      summary: Export campaign data in turtle format
+      operationId: exportCampaignData
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Campaign data exported successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fileName:
+                    type: string
+                  fileContent:
+                    type: string
+                    format: binary
+        "401":
+          description: Unauthorized - account issue
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: UserNotAuthorized
+        "404":
+          description: Campaign not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: CampaignNotFound
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Error executing script. | Oops, error. Please contact an administrator.
+
+  /api/annotation:
+    post:
+      tags:
+        - RDF
+      summary: Create a new annotation
+      operationId: createAnnotation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                annotationType:
+                  type: string
+                item:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    value:
+                      type: string
+                pageUrl:
+                  type: string
+                turtlePath:
+                  type: string
+                concepts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                      uri:
+                        type: string
+                campaign:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      format: int64
+              required:
+                - description
+                - annotationType
+                - item
+                - pageUrl
+                - turtlePath
+                - concepts
+                - campaign
+      responses:
+        "201":
+          description: Annotation created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Annotation"
+        "401":
+          description: Unauthorized - account issue
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Unauthorized
+        "404":
+          description: Resource not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: CampaignNotFound | Incorrect email.
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+    # patch:
+    #   tags:
+    #     - RDF
+    #   summary: Update an annotation
+    #   operationId: updateAnnotation
+    #   parameters:
+    #     - name: id
+    #       in: query
+    #       required: true
+    #       schema:
+    #         type: integer
+    #         format: int64
+    #     - name: name
+    #       in: query
+    #       required: true
+    #       schema:
+    #         type: string
+    #   responses:
+    #     "200":
+    #       description: Annotation updated successfully
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: "#/components/schemas/Annotation"
+    #     "401":
+    #       description: Unauthorized - account issue
+    #       content:
+    #         text/plain:
+    #           schema:
+    #             type: string
+    #             example: Unauthorized
+    #     "404":
+    #       description: Annotation not found
+    #       content:
+    #         text/plain:
+    #           schema:
+    #             type: string
+    #             example: Annotation not found.
+    #     "500":
+    #       description: Internal server error
+    #       content:
+    #         text/plain:
+    #           schema:
+    #             type: string
+    #             example: Oops, error. Please contact an administrator.
+
+  /api/annotation/user:
+    get:
+      tags:
+        - RDF
+      summary: Get annotations for current user
+      operationId: getAnnotationsByUser
+      responses:
+        "200":
+          description: Annotations retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Annotation"
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.
+
+  /api/plugin:
+    get:
+      tags:
+        - Plugin
+      summary: Download plugin
+      operationId: downloadPlugin
+      responses:
+        "200":
+          description: Plugin downloaded successfully
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Oops, error. Please contact an administrator.

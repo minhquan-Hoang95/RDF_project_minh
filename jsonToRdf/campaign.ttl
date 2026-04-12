@@ -1,0 +1,29 @@
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix diva: <http://example.org/diva#> .
+@prefix ns1: <http://www.w3.org/ns/oa#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/annotation/152/> a diva:Annotation ;
+    diva:HasCampaignId 202 ;
+    diva:HasDescription "ee" ;
+    diva:hasAnnotationType "comment" ;
+    diva:hasConcept <http://dbpedia.org/resource/Caarpsee> ;
+    dct:created "2025-06-11T15:59:25.625000+00:00"^^xsd:dateTime ;
+    dct:creator "colindeseroux@gmail.com" ;
+    ns1:hasTarget [ a diva:Annotation ;
+            diva:HasPageUrl <https://chatgpt.com/c/6849a747-4390-8009-ae8f-b00740db7964> ;
+            diva:hasAnnotationType "text" ;
+            diva:value "Jepp (Java embedded Python) – good performance, use" ] .
+
+<http://example.org/annotation/153/> a diva:Annotation ;
+    diva:HasCampaignId 202 ;
+    diva:HasDescription "ee" ;
+    diva:hasAnnotationType "comment" ;
+    diva:hasConcept <http://dbpedia.org/resource/Caarpsee> ;
+    dct:created "2025-06-11T15:59:38.606000+00:00"^^xsd:dateTime ;
+    dct:creator "colindeseroux@gmail.com" ;
+    ns1:hasTarget [ a diva:Annotation ;
+            diva:HasPageUrl <https://chatgpt.com/c/6849a747-4390-8009-ae8f-b00740db7964> ;
+            diva:hasAnnotationType "text" ;
+            diva:value "edded Python) – good performance, uses CPython." ] .
+
