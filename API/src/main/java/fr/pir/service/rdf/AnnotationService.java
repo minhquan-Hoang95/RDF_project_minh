@@ -61,8 +61,8 @@ public class AnnotationService {
 
     // TODO
     @Transactional
-    public Annotation updateAnnotation(Long id, String name, HttpServletRequest request) throws Exception {
-        L.debug("id : {}, name : {}", id, name);
+    public Annotation updateAnnotation(Long id, String description, HttpServletRequest request) throws Exception {
+        L.debug("id : {}, description : {}", id, description);
 
         User user = this.userService.getUserFromToken(request);
 
@@ -75,6 +75,8 @@ public class AnnotationService {
         if (!annotation.getCreator().getId().equals(user.getId())) {
             throw new AccountException("Unauthorized.");
         }
+
+        annotation.setDescription(description);
 
         this.annotationRepository.save(annotation);
 

@@ -69,33 +69,40 @@ public class RequestFilterConfig extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        L.debug("");
+        String uri = request.getRequestURI();
+        String method = request.getMethod();
+        L.debug("Processing request: {} {}", method, uri);
 
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        if ("OPTIONS".equalsIgnoreCase(method)) {
             filterChain.doFilter(request, response);
 
             return;
         }
 
         String jwt = parseJwt(request);
+        boolean isPublicEndpoint = this.authRequestMatcher.requestMatches(uri) || uri.startsWith("/api/auth");
 
-        if (correctJwt(jwt)) {
-            String id = this.jwtUtilService.getIdFromToken(jwt);
+        if (jwt != null) {
+            if (correctJwt(jwt)) {
+                String id = this.jwtUtilService.getIdFromToken(jwt);
+                UserDetails user = this.customUserDetailsService.loadUserById(id);
 
-            UserDetails user = this.customUserDetailsService.loadUserById(id);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null,
+                        user.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null,
-                    user.getAuthorities());
-
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else if (!this.authRequestMatcher.requestMatches(request.getRequestURI())) {
-            response.setStatus(400);
-            response.setContentType("text/plain");
-            response.setContentLength("Invalid bearer token.".length());
-            response.getWriter().write("Invalid bearer token.");
-            response.getWriter().flush();
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else if (!isPublicEndpoint) {
+                // Only return error if endpoint IS NOT public AND token is invalid
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setContentType("text/plain");
+                response.getWriter().write("Invalid bearer token.");
+                response.getWriter().flush();
+                return; // Stop processing the filter chain
+            }
+        } else if (!isPublicEndpoint) {
+            // No token and NOT a public endpoint -> handled by Spring Security but we can be explicit here
+            // We let Spring Security handle 401/403 based on config
         }
 
         filterChain.doFilter(request, response);

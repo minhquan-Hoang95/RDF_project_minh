@@ -22,6 +22,13 @@ public class OtherController {
 		return ResponseEntity.status(HttpStatus.OK).body("Hello World!");
 	}
 
+	@GetMapping("/api/health")
+	public ResponseEntity<String> healthCheck() {
+		L.debug("");
+
+		return ResponseEntity.status(HttpStatus.OK).body("Healthy");
+	}
+
 	/**
 	 * Endpoint to serve the Swagger UI HTML file.
 	 *

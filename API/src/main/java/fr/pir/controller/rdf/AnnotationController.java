@@ -50,13 +50,13 @@ public class AnnotationController {
     }
 
     @PatchMapping
-    public ResponseEntity<?> updateAnnotation(@RequestParam Long id, @RequestParam String name,
+    public ResponseEntity<?> updateAnnotation(@RequestParam Long id, @RequestParam String description,
             HttpServletRequest request) {
-        L.debug("id : {}, name : {}", id, name);
+        L.debug("id : {}, description : {}", id, description);
 
         try {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(this.annotationService.updateAnnotation(id, name, request));
+                    .body(this.annotationService.updateAnnotation(id, description, request));
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (AccountException e) {

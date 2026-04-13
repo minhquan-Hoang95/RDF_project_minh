@@ -19,30 +19,53 @@ function ContentAnnotator({ campaign, onReturnToCampaignOptions }) {
   const [showAnnotations, setShowAnnotations] = useState(false);
   const [annotations, setAnnotations] = useState([]);
 
-  /* global chrome */
+  /* global browser, chrome */
 
   useEffect(() => {
-    if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
-      chrome.runtime.sendMessage({ request: "getSelectedData" }, (response) => {
-        if (response) {
-          setItem(response);
-        }
-      });
+    const browserObj = typeof browser !== "undefined" ? browser : (typeof chrome !== "undefined" ? chrome : null);
+
+    if (browserObj && browserObj.runtime && browserObj.runtime.sendMessage) {
+      const p = browserObj.runtime.sendMessage({ request: "getSelectedData" });
+      if (p && p.then) {
+        p.then((response) => {
+          if (response) {
+            setItem(response);
+          }
+        }).catch(err => console.warn("Error getting selected data:", err));
+      } else {
+        // Fallback for callback-based APIs
+        browserObj.runtime.sendMessage({ request: "getSelectedData" }, (response) => {
+          if (response) {
+            setItem(response);
+          }
+        });
+      }
     } else {
       console.warn(
-        "chrome.runtime.sendMessage is not available in this environment."
+        "Extension API is not available in this environment."
       );
     }
 
-    if (chrome && chrome.tabs && chrome.tabs.query) {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        const currentTab = tabs[0];
-        if (currentTab && currentTab.url) {
-          setPageUrl(currentTab.url);
-        }
-      });
+    if (browserObj && browserObj.tabs && browserObj.tabs.query) {
+      const p = browserObj.tabs.query({ active: true, currentWindow: true });
+      if (p && p.then) {
+        p.then((tabs) => {
+          const currentTab = tabs[0];
+          if (currentTab && currentTab.url) {
+            setPageUrl(currentTab.url);
+          }
+        }).catch(err => console.warn("Error querying tabs:", err));
+      } else {
+        // Fallback for callback-based APIs
+        browserObj.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          const currentTab = tabs[0];
+          if (currentTab && currentTab.url) {
+            setPageUrl(currentTab.url);
+          }
+        });
+      }
     } else {
-      console.warn("chrome.tabs.query is not available in this environment.");
+      console.warn("Extension API is not available in this environment.");
     }
   }, []);
 
@@ -56,8 +79,13 @@ function ContentAnnotator({ campaign, onReturnToCampaignOptions }) {
       return;
     }
 
+    const wordCount = item.type === "text" ? item.value.trim().split(/\s+/).length : 0;
+    const finalDescription = item.type === "text" 
+      ? `${description.trim()} (Selection word count: ${wordCount})`
+      : description.trim();
+
     const annotationData = {
-      description: description.trim(),
+      description: finalDescription,
       annotationType: annotationType,
       item: item,
       pageUrl: pageUrl,
@@ -202,12 +230,15 @@ function ContentAnnotator({ campaign, onReturnToCampaignOptions }) {
                   color: "#007bff",
                 }}
                 onClick={() => {
-                  chrome.runtime.sendMessage({
-                    type: "open",
-                    url: annotation.pageUrl,
-                    y: annotation.item.position.y,
-                    text: annotation.item.value
-                  });
+                  const browserObj = typeof browser !== "undefined" ? browser : (typeof chrome !== "undefined" ? chrome : null);
+                  if (browserObj && browserObj.runtime) {
+                    browserObj.runtime.sendMessage({
+                      type: "open",
+                      url: annotation.pageUrl,
+                      y: annotation.item.position.y,
+                      text: annotation.item.value
+                    });
+                  }
                 }}
               >
                 <strong>Position:</strong> x: {annotation.item.position.x}, y:{" "}

@@ -45,6 +45,11 @@ public class EmailService {
 
         EmailTemplate emailTemplate = this.emailTemplateService.getEmailTemplateByName(templateName);
 
+        if (emailTemplate == null) {
+            L.error("Email template not found: {}", templateName);
+            throw new IllegalArgumentException("Email template not found: " + templateName);
+        }
+
         templateInfos.put("apiBaseUrl", this.apiBaseUrl);
 
         Context context = new Context();

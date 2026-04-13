@@ -1,6 +1,7 @@
 package fr.pir.controller.user;
 
-import javax.security.auth.login.AccountException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import fr.pir.dto.LoginRequest;
 import fr.pir.exception.EmailException;
 import fr.pir.exception.NotFoundException;
 import fr.pir.exception.VerificationCodeException;
@@ -30,8 +32,9 @@ import fr.pir.model.user.User;
 import fr.pir.service.user.AuthService;
 import fr.pir.service.user.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
-
+/**
+ * Authentication controller handling login, signup, password reset
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
@@ -45,131 +48,165 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Validate account with email verification code
+     */
     @GetMapping("/validate")
     public ResponseEntity<String> validateAccount(@RequestParam String email, @RequestParam String code) {
-        L.debug("email : {}", email);
+        L.debug("Validating account");
 
         try {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(this.authService.validateAccount(email, code));
         } catch (NotFoundException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
+            L.error("User not found: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (VerificationCodeException | AccountException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
+        } catch (VerificationCodeException | fr.pir.exception.AccountException e) {
+            L.error("Verification error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            L.error("An exception is raised", e);
-
+            L.error("Validation error", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Oops, error. Please contact an administrator.");
         }
     }
 
-    @GetMapping
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,
+    /**
+     * Login endpoint - NEW: Uses POST with body instead of GET with params
+     * @param loginRequest - { "email": "user@example.com", "password": "password123" }
+     * @param request - HTTP request context
+     * @return JWT token and user information
+     */
+    @PostMapping("/login")
+    public ResponseEntity<String> login(
+            @Valid @RequestBody LoginRequest loginRequest,
             HttpServletRequest request) {
-        L.debug("email : {}", email);
 
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(this.authService.login(email, password, request));
-        } catch (NotFoundException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (BadCredentialsException | AccountException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        } catch (LockedException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account locked.");
-        } catch (Exception e) {
-            L.error("An exception is raised", e);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Oops, error. Please contact an administrator.");
-        }
-    }
-
-    @PatchMapping
-    public ResponseEntity<String> passwordForgotten(@RequestParam String email) {
-        L.debug("email : {}", email);
-
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(this.authService.passwordForgotten(email));
-        } catch (NotFoundException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Oops, error. Please contact an administrator.");
-        }
-    }
-
-    @PutMapping
-    public ResponseEntity<String> newPassword(@RequestParam String email, @RequestParam String code,
-            @RequestParam String password, HttpServletRequest request) {
-        L.debug("email : {}", email);
+        L.debug("Login attempt");
 
         try {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(this.authService.newPassword(email, code, password, request));
+                    .body(this.authService.login(loginRequest.getEmail(),
+                                                loginRequest.getPassword(),
+                                                request));
         } catch (NotFoundException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (VerificationCodeException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            L.error("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        } catch (BadCredentialsException e) {
+            L.warn("Invalid credentials attempt");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid email or password");
+        } catch (LockedException e) {
+            L.warn("Account locked");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account is locked");
         } catch (Exception e) {
-            L.error("An exception is raised", e);
-
+            L.error("Login error", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Oops, error. Please contact an administrator.");
+                    .body("An error occurred during login");
         }
     }
 
-    @PostMapping
-    public ResponseEntity<String> signup(@RequestBody User user) {
-        L.debug("email : {}", user.getEmail());
+    /**
+     * DEPRECATED: Use POST /auth/login instead
+     * @deprecated
+     */
+    @GetMapping
+    @Deprecated(since = "2.1.0", forRemoval = true)
+    public ResponseEntity<String> loginDeprecated(@RequestParam String email,
+                                             @RequestParam String password,
+                                             HttpServletRequest request) {
+        L.warn("Deprecated GET /api/auth endpoint used. Please use POST /api/auth/login instead");
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).build();
+    }
+
+    /**
+     * Request password reset - sends verification code to email
+     */
+    @PatchMapping
+    public ResponseEntity<String> passwordForgotten(@RequestParam String email) {
+        L.debug("Password reset requested");
 
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.signup(user));
-        } catch (EmailException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(this.userService.passwordForgotten(email));
+        } catch (NotFoundException e) {
+            L.error("User not found: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (MailSendException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
+            L.error("Email send error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Not possible to send email to this email address.");
-        } catch (MailAuthenticationException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
+                    .body("Not possible to send email to this address.");
+        } catch (Exception e) {
+            L.error("Password reset error", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Mail dispatch service currently offline.");
+                    .body("An error occurred during password reset");
+        }
+    }
+
+    /**
+     * Set new password after verification
+     */
+    @PutMapping
+    public ResponseEntity<String> newPassword(@RequestParam String email,
+                                         @RequestParam String code,
+                                         @RequestParam String password,
+                                         HttpServletRequest request) {
+        L.debug("Setting new password");
+
+        try {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(this.userService.newPassword(email, code, password, request));
+        } catch (NotFoundException e) {
+            L.error("User not found: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (VerificationCodeException e) {
+            L.error("Invalid verification code: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            L.error("Password update error", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while updating password");
+        }
+    }
+
+    /**
+     * Sign up new user - requires validation
+     * @param user - User data with @Valid validation
+     * @return Confirmation message
+     */
+    @PostMapping
+    public ResponseEntity<String> signup(@Valid @RequestBody User user) {
+        L.debug("Signup request");
+
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(this.userService.signup(user));
+        } catch (EmailException | IllegalArgumentException e) {
+            L.error("Email error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            L.error("System configuration error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } catch (MailSendException e) {
+            L.error("Email send error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Not possible to send email to this address.");
+        } catch (MailAuthenticationException e) {
+            L.error("Mail service error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Mail service is currently offline.");
         } catch (DataIntegrityViolationException e) {
-            L.error("An exception is raised : {}", e.getMessage());
-
+            L.error("Data integrity error: {}", e.getMessage());
             String error = e.getMessage();
-
-            if (error.contains("duplicate key")) {
+            if (error != null && error.contains("duplicate key")) {
                 if (error.contains("Key (email)=")) {
-                    return ResponseEntity.status(HttpStatus.CONFLICT).body("Duplicate key email.");
+                    return ResponseEntity.status(HttpStatus.CONFLICT)
+                            .body("Email already registered.");
                 }
             }
-
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data integrity violation.");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Data integrity violation.");
         } catch (Exception e) {
-            L.error("An exception is raised", e);
-
+            L.error("Signup error", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Oops, error. Please contact an administrator.");
         }

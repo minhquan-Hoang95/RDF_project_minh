@@ -63,6 +63,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll() // Explicitly permit all auth endpoints
                         .requestMatchers(this.authRequestMatcher.getRequestMatchers())
                         .permitAll().anyRequest().authenticated())
                 .exceptionHandling(exce -> exce.authenticationEntryPoint(this.authenticationEntryPointConfig))

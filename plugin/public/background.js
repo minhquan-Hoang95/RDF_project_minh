@@ -1,6 +1,8 @@
 let selectedData = { type: null, value: "", position: { x: 0, y: 0 } };
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+const browserObj = typeof browser !== "undefined" ? browser : chrome;
+
+browserObj.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type && message.position) {
     selectedData = {
       type: message.type,
@@ -14,14 +16,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.type === "open") {
-    chrome.tabs.create({ url: message.url }, (tab) => {
-      chrome.scripting.executeScript({
+    browserObj.tabs.create({ url: message.url }, (tab) => {
+      browserObj.scripting.executeScript({
         target: { tabId: tab.id },
         func: (y) => window.scrollBy(0, y - 50 > 0 ? y - 50 : 0),
         args: [message.y],
       });
 
-      chrome.scripting.executeScript({
+      browserObj.scripting.executeScript({
         target: { tabId: tab.id },
         func: (text) => {
           const highlightText = (text) => {

@@ -124,6 +124,11 @@ public class UserService {
 
         Role role = this.roleRepository.findRoleByName("USER");
 
+        if (role == null) {
+            L.error("Default USER role not found in database");
+            throw new IllegalStateException("Default USER role not found in database");
+        }
+
         user.setRole(role);
 
         this.userRepository.save(user);
