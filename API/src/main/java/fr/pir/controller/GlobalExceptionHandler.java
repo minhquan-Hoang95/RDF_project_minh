@@ -31,10 +31,13 @@ public class GlobalExceptionHandler {
 
         List<ErrorResponse.FieldError> errors = ex.getBindingResult().getAllErrors()
             .stream()
-            .map(error -> new ErrorResponse.FieldError(
-                ((FieldError) error).getField(),
-                error.getDefaultMessage()
-            ))
+            .map(error -> {
+                String field = error instanceof FieldError ? ((FieldError) error).getField() : error.getObjectName();
+                return new ErrorResponse.FieldError(
+                    field,
+                    error.getDefaultMessage()
+                );
+            })
             .collect(Collectors.toList());
 
         ErrorResponse response = ErrorResponse.builder()
@@ -53,11 +56,11 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-        L.error("Unexpected error", ex);
+        L.error("Unexpected error: {} - {}", ex.getClass().getName(), ex.getMessage(), ex);
 
         ErrorResponse response = ErrorResponse.builder()
             .status("error")
-            .message("An unexpected error occurred")
+            .message("An unexpected error occurred: " + ex.getMessage())
             .code(500)
             .timestamp(LocalDateTime.now())
             .build();

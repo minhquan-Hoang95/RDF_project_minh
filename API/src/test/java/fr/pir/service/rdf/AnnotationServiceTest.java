@@ -97,4 +97,16 @@ public class AnnotationServiceTest {
             annotationService.updateAnnotation(10L, "New Description", request);
         });
     }
+
+    @Test
+    void testCreateAnnotation_EmptyDescription_ThrowsException() {
+        // Arrange
+        Annotation emptyAnnotation = new Annotation();
+        emptyAnnotation.setDescription(""); // Empty description
+        
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> {
+            annotationService.createAnnotation(emptyAnnotation, request);
+        });
+    }
 }

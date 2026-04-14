@@ -101,11 +101,11 @@ public class AuthControllerSignupTest {
         user.setEmail("john.doe@example.com");
         user.setPassword("password123");
 
-        // This should return 400 now as we handle IllegalArgumentException as BadRequest
+        // Email failure is now handled gracefully: account is created and auto-activated.
         mockMvc.perform(post("/api/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isCreated());
     }
 
     @Autowired

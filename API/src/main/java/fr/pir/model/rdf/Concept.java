@@ -15,6 +15,6 @@ public class Concept {
     private String uri;
 
     @Column(nullable = false)
-    private String value;
+    private String conceptValue;
 
 }

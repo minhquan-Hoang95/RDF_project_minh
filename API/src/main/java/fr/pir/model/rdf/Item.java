@@ -2,6 +2,7 @@ package fr.pir.model.rdf;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,9 +15,9 @@ public class Item {
     private String type;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String value;
+    private String itemValue;
 
-    @Column(nullable = false)
+    @Embedded
     private Position position;
 
 }

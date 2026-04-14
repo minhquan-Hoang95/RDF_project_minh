@@ -9,7 +9,7 @@ import thesaurusData from "../data/thesaurus.json";
 function ContentAnnotator({ campaign, onReturnToCampaignOptions }) {
   const [item, setItem] = useState({
     type: null,
-    value: "",
+    itemValue: "",
     position: { x: 0, y: 0 },
   });
   const [annotationType, setAnnotationType] = useState("comment");
@@ -72,25 +72,26 @@ function ContentAnnotator({ campaign, onReturnToCampaignOptions }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!annotationType || !description.trim() || !item.value.trim()) {
+    if (!annotationType || !description.trim() || !item.itemValue.trim()) {
       alert(
         "Please select an annotation type, enter a description and select an item."
       );
       return;
     }
 
-    const wordCount = item.type === "text" ? item.value.trim().split(/\s+/).length : 0;
+    const wordCount = item.type === "text" ? item.itemValue.trim().split(/\s+/).length : 0;
+    const charCount = item.type === "text" ? item.itemValue.length : 0;
     const finalDescription = item.type === "text" 
-      ? `${description.trim()} (Selection word count: ${wordCount})`
+      ? `${description.trim()} (Selection word count: ${wordCount}, char count: ${charCount})`
       : description.trim();
 
     const annotationData = {
       description: finalDescription,
       annotationType: annotationType,
-      item: item,
+      item: { ...item, type: item.type, itemValue: item.itemValue, position: item.position },
       pageUrl: pageUrl,
       turtlePath: "",
-      concepts: concepts.map((c) => ({ value: c.value, uri: c.uri })),
+      concepts: concepts.map((c) => ({ conceptValue: c.value, uri: c.uri })),
       campaign: { id: campaign.id },
     };
 
@@ -236,7 +237,7 @@ function ContentAnnotator({ campaign, onReturnToCampaignOptions }) {
                       type: "open",
                       url: annotation.pageUrl,
                       y: annotation.item.position.y,
-                      text: annotation.item.value
+                      text: annotation.item.itemValue
                     });
                   }
                 }}
@@ -255,10 +256,10 @@ function ContentAnnotator({ campaign, onReturnToCampaignOptions }) {
                 <strong>Item Annotated:</strong>
               </p>
               {annotation.item.type === "text" ? (
-                <p>{annotation.item.value}</p>
+                <p>{annotation.item.itemValue}</p>
               ) : (
                 <img
-                  src={annotation.item.value}
+                  src={annotation.item.itemValue}
                   alt="Annotated item"
                   style={{ maxWidth: "100%", height: "auto" }}
                 />
@@ -269,7 +270,7 @@ function ContentAnnotator({ campaign, onReturnToCampaignOptions }) {
               <ul>
                 {annotation.concepts.map((concept, idx) => (
                   <li key={idx}>
-                    {concept.value} -{" "}
+                    {concept.conceptValue} -{" "}
                     <a
                       href={concept.uri}
                       target="_blank"
@@ -309,17 +310,22 @@ function ContentAnnotator({ campaign, onReturnToCampaignOptions }) {
           )}
         </div>
         <div className="selected-content">
-          {item.type === "text" && <p>Selected Text: {item.value}</p>}
+          <h3>Selected Content Preview:</h3>
+          {item.type === "text" && (
+            <div className="preview-text-box">
+              <p>"{item.itemValue}"</p>
+            </div>
+          )}
           {item.type === "image" && (
             <img
-              src={item.value}
+              src={item.itemValue}
               alt="Selected"
-              style={{ maxWidth: "300px", maxHeight: "300px" }}
+              style={{ maxWidth: "100%", maxHeight: "150px", borderRadius: "4px" }}
             />
           )}
 
-          <p style={{ fontSize: "0.9em", color: "#888" }}>
-            Position in page: (x: {item.position.x}, y: {item.position.y})
+          <p style={{ fontSize: "0.8em", color: "#888", marginTop: "5px" }}>
+            Position: (x: {item.position.x}, y: {item.position.y})
           </p>
         </div>
 

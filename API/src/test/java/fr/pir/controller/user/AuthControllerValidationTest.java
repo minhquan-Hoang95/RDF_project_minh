@@ -7,86 +7,77 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.pir.model.user.User;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Test suite for authentication validation
+ * Validation tests for authentication endpoints.
+ * Verifies that @Valid constraints on request bodies return 400 for bad input.
+ *
+ * Filters are disabled (addFilters = false) so these tests focus purely on
+ * Spring MVC input validation, not on the security filter chain.
  */
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 class AuthControllerValidationTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    // ── Signup (@Valid User) ────────────────────────────────────────────────
 
     @Test
     void testSignupWithInvalidEmailReturns400() throws Exception {
-        User user = new User();
-        user.setEmail("invalid-email");
-        user.setPassword("password123");
-        user.setFirstName("John");
-        user.setLastName("Doe");
+        // Plain-text JSON so the controller receives the raw value, not a BCrypt hash.
+        String body = "{\"email\":\"invalid-email\",\"password\":\"password123\",\"firstName\":\"John\",\"lastName\":\"Doe\"}";
 
         mockMvc.perform(post("/api/auth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
+                .content(body))
             .andExpect(status().isBadRequest());
     }
 
     @Test
     void testSignupWithShortPasswordReturns400() throws Exception {
-        User user = new User();
-        user.setEmail("valid@email.com");
-        user.setPassword("short");
-        user.setFirstName("John");
-        user.setLastName("Doe");
+        String body = "{\"email\":\"valid@email.com\",\"password\":\"short\",\"firstName\":\"John\",\"lastName\":\"Doe\"}";
 
         mockMvc.perform(post("/api/auth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
+                .content(body))
             .andExpect(status().isBadRequest());
     }
 
     @Test
     void testSignupWithMissingFirstNameReturns400() throws Exception {
-        User user = new User();
-        user.setEmail("valid@email.com");
-        user.setPassword("password123");
-        user.setFirstName("");
-        user.setLastName("Doe");
+        String body = "{\"email\":\"valid@email.com\",\"password\":\"password123\",\"firstName\":\"\",\"lastName\":\"Doe\"}";
 
         mockMvc.perform(post("/api/auth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
+                .content(body))
             .andExpect(status().isBadRequest());
     }
 
+    // ── Login (@Valid LoginRequest) ─────────────────────────────────────────
+
     @Test
     void testLoginWithShortPasswordReturns400() throws Exception {
-        String loginRequest = "{\"email\": \"test@example.com\", \"password\": \"short\"}";
+        String body = "{\"email\":\"test@example.com\",\"password\":\"short\"}";
 
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(loginRequest))
+                .content(body))
             .andExpect(status().isBadRequest());
     }
 
     @Test
     void testLoginWithInvalidEmailReturns400() throws Exception {
-        String loginRequest = "{\"email\": \"invalid\", \"password\": \"password123\"}";
+        String body = "{\"email\":\"invalid\",\"password\":\"password123\"}";
 
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(loginRequest))
+                .content(body))
             .andExpect(status().isBadRequest());
     }
 }
-

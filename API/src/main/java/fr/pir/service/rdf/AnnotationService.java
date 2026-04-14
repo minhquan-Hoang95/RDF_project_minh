@@ -48,6 +48,15 @@ public class AnnotationService {
     public Annotation createAnnotation(Annotation annotation, HttpServletRequest request) throws Exception {
         L.debug("description : {}", annotation.getDescription());
 
+        if (annotation.getDescription() == null || annotation.getDescription().trim().isEmpty()) {
+            throw new IllegalArgumentException("Description cannot be empty.");
+        }
+
+        if (annotation.getItem() == null || annotation.getItem().getItemValue() == null
+                || annotation.getItem().getItemValue().trim().isEmpty()) {
+            throw new IllegalArgumentException("Annotated item cannot be empty.");
+        }
+
         Campaign campaign = this.campaignService.getCampaignById(annotation.getCampaign().getId(), request);
         User user = this.userService.getUserFromToken(request);
 
@@ -59,7 +68,6 @@ public class AnnotationService {
         return annotation;
     }
 
-    // TODO
     @Transactional
     public Annotation updateAnnotation(Long id, String description, HttpServletRequest request) throws Exception {
         L.debug("id : {}, description : {}", id, description);

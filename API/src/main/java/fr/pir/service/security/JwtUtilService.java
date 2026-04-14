@@ -94,9 +94,12 @@ public class JwtUtilService {
     public Boolean validateToken(String token, UserDetails user) {
         L.debug("token : {}", token);
 
-        String id = this.getIdFromToken(token);
-
-        return (id.equals(user.getUsername()) && !this.isTokenExpired(token));
+        try {
+            String id = this.getIdFromToken(token);
+            return (id.equals(user.getUsername()) && !this.isTokenExpired(token));
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            return false;
+        }
     }
 
 }

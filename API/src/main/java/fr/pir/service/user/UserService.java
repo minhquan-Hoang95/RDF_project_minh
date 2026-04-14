@@ -122,6 +122,16 @@ public class UserService {
 
         this.properUser(user);
 
+        String rawPwd = user.getRawPassword();
+        if (rawPwd == null || rawPwd.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
+        }
+
+        String firstName = user.getFirstName();
+        if (firstName == null || firstName.trim().isEmpty()) {
+            throw new IllegalArgumentException("First name is required");
+        }
+
         Role role = this.roleRepository.findRoleByName("USER");
 
         if (role == null) {
@@ -133,7 +143,14 @@ public class UserService {
 
         this.userRepository.save(user);
 
-        this.verificationCodeService.createAndSendVerificationCode(user.getEmail(), "new_account");
+        try {
+            this.verificationCodeService.createAndSendVerificationCode(user.getEmail(), "new_account");
+        } catch (Exception e) {
+            L.warn("Email service unavailable ({}). Activating account without email verification.", e.getMessage());
+            user.setActivate(true);
+            this.userRepository.save(user);
+            return "Account created. Email verification is currently unavailable — you can log in directly.";
+        }
 
         return "Verification code sent to email.";
     }

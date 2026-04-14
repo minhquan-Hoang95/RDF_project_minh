@@ -1,0 +1,310 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m---------------------------< [0;36mfr.pir:pir-rdf[0;1m >---------------------------[m
+[[1;34mINFO[m] [1mBuilding pir-rdf 0.0.1-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.3.1:resources[m [1m(default-resources)[m @ [36mpir-rdf[0;1m ---[m
+[[1;34mINFO[m] Copying 1 resource from src/main/resources to target/classes
+[[1;34mINFO[m] Copying 6 resources from src/main/resources to target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.13.0:compile[m [1m(default-compile)[m @ [36mpir-rdf[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged source code[m.
+[[1;34mINFO[m] Compiling 52 source files with javac [debug parameters release 17] to target/classes
+[[1;34mINFO[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/main/java/fr/pir/config/RateLimitingInterceptor.java: /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/main/java/fr/pir/config/RateLimitingInterceptor.java uses or overrides a deprecated API.
+[[1;34mINFO[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/main/java/fr/pir/config/RateLimitingInterceptor.java: Recompile with -Xlint:deprecation for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.3.1:testResources[m [1m(default-testResources)[m @ [36mpir-rdf[0;1m ---[m
+[[1;34mINFO[m] Copying 1 resource from src/test/resources to target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.13.0:testCompile[m [1m(default-testCompile)[m @ [36mpir-rdf[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged dependency[m.
+[[1;34mINFO[m] Compiling 8 source files with javac [debug parameters release 17] to target/test-classes
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/rdf/AnnotationControllerTest.java:[41,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/rdf/AnnotationControllerTest.java:[41,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/rdf/AnnotationControllerTest.java:[41,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/rdf/AnnotationControllerTest.java:[41,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/rdf/AnnotationControllerTest.java:[41,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerForbiddenTest.java:[32,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerForbiddenTest.java:[32,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerForbiddenTest.java:[32,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerForbiddenTest.java:[32,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerForbiddenTest.java:[32,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerForbiddenTest.java:[35,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerForbiddenTest.java:[35,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerForbiddenTest.java:[35,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerForbiddenTest.java:[35,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerForbiddenTest.java:[35,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerSignupTest.java:[45,6] org.springframework.boot.test.mock.mockito.SpyBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerSignupTest.java:[45,6] org.springframework.boot.test.mock.mockito.SpyBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerSignupTest.java:[45,6] org.springframework.boot.test.mock.mockito.SpyBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerSignupTest.java:[45,6] org.springframework.boot.test.mock.mockito.SpyBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerSignupTest.java:[45,6] org.springframework.boot.test.mock.mockito.SpyBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerSignupTest.java:[48,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerSignupTest.java:[48,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerSignupTest.java:[48,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerSignupTest.java:[48,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;33mWARNING[m] /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/src/test/java/fr/pir/controller/user/AuthControllerSignupTest.java:[48,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:3.5.3:test[m [1m(default-test)[m @ [36mpir-rdf[0;1m ---[m
+[[1;34mINFO[m] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running fr.pir.controller.user.[1mAuthControllerValidationTest[m
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+13-04-2026 20:32:43,134 main WARN DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer logDuplicateJsonObjectsWarning -> 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/home/minh/.m2/repository/org/json/json/20240303/json-20240303.jar!/org/json/JSONObject.class
+	jar:file:/home/minh/.m2/repository/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+13-04-2026 20:32:43,153 main INFO AuthControllerValidationTest logStarting -> Starting AuthControllerValidationTest using Java 23 with PID 215337 (started by minh in /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API)
+13-04-2026 20:32:43,157 main DEBUG AuthControllerValidationTest logStarting -> Running with Spring Boot v3.4.5, Spring v6.2.6
+13-04-2026 20:32:43,159 main INFO AuthControllerValidationTest logStartupProfileInfo -> The following 1 profile is active: "test"
+13-04-2026 20:32:45,625 main WARN deprecation constructDialect -> HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+13-04-2026 20:32:47,871 main DEBUG ThymeleafConfig templateEngine -> 
+13-04-2026 20:32:47,888 main DEBUG ThymeleafConfig stringTemplateResolver -> 
+13-04-2026 20:32:48,085 main DEBUG SecurityConfig authenticationManager -> 
+13-04-2026 20:32:48,109 main DEBUG SecurityConfig authenticationProvider -> 
+13-04-2026 20:32:48,130 main DEBUG SecurityConfig passwordEncoder -> 
+13-04-2026 20:32:48,138 main WARN InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer configure -> Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+13-04-2026 20:32:48,464 main INFO WebConfig addInterceptors -> Registering rate limiting interceptor
+13-04-2026 20:32:48,473 main INFO WebConfig addCorsMappings -> Configuring CORS with origins: http://localhost:3000,http://localhost:8080,http://localhost:5173
+13-04-2026 20:32:48,475 main INFO WebConfig addCorsMappings -> CORS configured successfully with pattern *
+13-04-2026 20:32:48,951 main DEBUG SecurityConfig filterChain -> 
+13-04-2026 20:32:48,969 main DEBUG AuthRequestMatcher getRequestMatchers -> 
+13-04-2026 20:32:49,712 main DEBUG RequestFilterConfig init -> Filter 'requestFilterConfig' configured for use
+13-04-2026 20:32:49,814 main INFO AuthControllerValidationTest logStarted -> Started AuthControllerValidationTest in 6.979 seconds (process running for 8.512)
+13-04-2026 20:32:49,925 main DEBUG RDFApplication run -> Start main code
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/minh/.m2/repository/net/bytebuddy/byte-buddy-agent/1.15.11/byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+13-04-2026 20:32:50,621 main DEBUG RequestFilterConfig doFilterInternal -> Processing request: POST /api/auth
+13-04-2026 20:32:50,621 main DEBUG RequestFilterConfig parseJwt -> 
+13-04-2026 20:32:50,622 main DEBUG AuthRequestMatcher requestMatches -> uri : /api/auth
+13-04-2026 20:32:50,769 main DEBUG AuthController signup -> Signup request
+13-04-2026 20:32:50,776 main DEBUG UserService signup -> email : valid@email.com
+13-04-2026 20:32:50,777 main DEBUG UserService properUser -> email : valid@email.com
+13-04-2026 20:32:50,872 main ERROR UserService signup -> Default USER role not found in database
+13-04-2026 20:32:50,875 main ERROR AuthController signup -> System configuration error: Default USER role not found in database
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/auth
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"176"]
+             Body = {"id":null,"firstName":"John","lastName":"Doe","email":"valid@email.com","password":"$2a$10$eH9JlqSMH0A/mk35LGj4h.qOJCNQXD0OINrIJOReNkKN8VAuLZxey","activate":false,"role":null}
+    Session Attrs = {}
+
+Handler:
+             Type = fr.pir.controller.user.AuthController
+           Method = fr.pir.controller.user.AuthController#signup(User)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 500
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"text/plain;charset=UTF-8", Content-Length:"39", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = text/plain;charset=UTF-8
+             Body = Default USER role not found in database
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+13-04-2026 20:32:50,918 main DEBUG RequestFilterConfig doFilterInternal -> Processing request: POST /api/auth
+13-04-2026 20:32:50,919 main DEBUG RequestFilterConfig parseJwt -> 
+13-04-2026 20:32:50,919 main DEBUG AuthRequestMatcher requestMatches -> uri : /api/auth
+13-04-2026 20:32:51,008 main DEBUG AuthController signup -> Signup request
+13-04-2026 20:32:51,010 main DEBUG UserService signup -> email : invalid
+13-04-2026 20:32:51,010 main DEBUG UserService properUser -> email : invalid
+13-04-2026 20:32:51,011 main ERROR UserService properUser -> Incorrect email : invalid
+13-04-2026 20:32:51,014 main ERROR AuthController signup -> Email error: Incorrect email.
+13-04-2026 20:32:51,117 main DEBUG RequestFilterConfig doFilterInternal -> Processing request: POST /api/auth
+13-04-2026 20:32:51,118 main DEBUG RequestFilterConfig parseJwt -> 
+13-04-2026 20:32:51,118 main DEBUG AuthRequestMatcher requestMatches -> uri : /api/auth
+13-04-2026 20:32:51,200 main DEBUG AuthController signup -> Signup request
+13-04-2026 20:32:51,201 main DEBUG UserService signup -> email : valid@email.com
+13-04-2026 20:32:51,201 main DEBUG UserService properUser -> email : valid@email.com
+13-04-2026 20:32:51,205 main ERROR UserService signup -> Default USER role not found in database
+13-04-2026 20:32:51,207 main ERROR AuthController signup -> System configuration error: Default USER role not found in database
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/auth
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"172"]
+             Body = {"id":null,"firstName":"","lastName":"Doe","email":"valid@email.com","password":"$2a$10$s8jU006hAARGidNqu.eAx.rFjL3A5BpiUbH6hafIQ8MxgQTLKIMZq","activate":false,"role":null}
+    Session Attrs = {}
+
+Handler:
+             Type = fr.pir.controller.user.AuthController
+           Method = fr.pir.controller.user.AuthController#signup(User)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 500
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"text/plain;charset=UTF-8", Content-Length:"39", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = text/plain;charset=UTF-8
+             Body = Default USER role not found in database
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+13-04-2026 20:32:51,299 main DEBUG RequestFilterConfig doFilterInternal -> Processing request: POST /api/auth
+13-04-2026 20:32:51,299 main DEBUG RequestFilterConfig parseJwt -> 
+13-04-2026 20:32:51,300 main DEBUG AuthRequestMatcher requestMatches -> uri : /api/auth
+13-04-2026 20:32:51,379 main DEBUG AuthController signup -> Signup request
+13-04-2026 20:32:51,380 main DEBUG UserService signup -> email : invalid-email
+13-04-2026 20:32:51,380 main DEBUG UserService properUser -> email : invalid-email
+13-04-2026 20:32:51,380 main ERROR UserService properUser -> Incorrect email : invalid-email
+13-04-2026 20:32:51,381 main ERROR AuthController signup -> Email error: Incorrect email.
+13-04-2026 20:32:51,394 main DEBUG RequestFilterConfig doFilterInternal -> Processing request: POST /api/auth
+13-04-2026 20:32:51,394 main DEBUG RequestFilterConfig parseJwt -> 
+13-04-2026 20:32:51,394 main DEBUG AuthRequestMatcher requestMatches -> uri : /api/auth
+13-04-2026 20:32:51,475 main DEBUG AuthController signup -> Signup request
+13-04-2026 20:32:51,476 main DEBUG UserService signup -> email : test@example.com
+13-04-2026 20:32:51,476 main DEBUG UserService properUser -> email : test@example.com
+13-04-2026 20:32:51,479 main ERROR UserService signup -> Default USER role not found in database
+13-04-2026 20:32:51,480 main ERROR AuthController signup -> System configuration error: Default USER role not found in database
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/auth
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"50"]
+             Body = {"email": "test@example.com", "password": "short"}
+    Session Attrs = {}
+
+Handler:
+             Type = fr.pir.controller.user.AuthController
+           Method = fr.pir.controller.user.AuthController#signup(User)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 500
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"text/plain;charset=UTF-8", Content-Length:"39", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = text/plain;charset=UTF-8
+             Body = Default USER role not found in database
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+[[1;31mERROR[m] [1;31mTests [0;1mrun: [0;1m5[m, [1;31mFailures: [0;1;31m3[m, Errors: 0, Skipped: 0, Time elapsed: 9.509 s[1;31m <<< FAILURE![m -- in fr.pir.controller.user.[1mAuthControllerValidationTest[m
+[[1;31mERROR[m] fr.pir.controller.user.AuthControllerValidationTest.testSignupWithShortPasswordReturns400 -- Time elapsed: 0.969 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<400> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:61)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:128)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:640)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at fr.pir.controller.user.AuthControllerValidationTest.testSignupWithShortPasswordReturns400(AuthControllerValidationTest.java:55)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+
+[[1;31mERROR[m] fr.pir.controller.user.AuthControllerValidationTest.testSignupWithMissingFirstNameReturns400 -- Time elapsed: 0.192 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<400> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:61)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:128)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:640)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at fr.pir.controller.user.AuthControllerValidationTest.testSignupWithMissingFirstNameReturns400(AuthControllerValidationTest.java:69)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+
+[[1;31mERROR[m] fr.pir.controller.user.AuthControllerValidationTest.testLoginWithShortPasswordReturns400 -- Time elapsed: 0.098 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<400> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:61)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:128)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:640)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at fr.pir.controller.user.AuthControllerValidationTest.testLoginWithShortPasswordReturns400(AuthControllerValidationTest.java:79)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;31mERROR[m] [1;31mFailures: [m
+[[1;31mERROR[m] [1;31m  AuthControllerValidationTest.testLoginWithShortPasswordReturns400:79 Status expected:<400> but was:<500>[m
+[[1;31mERROR[m] [1;31m  AuthControllerValidationTest.testSignupWithMissingFirstNameReturns400:69 Status expected:<400> but was:<500>[m
+[[1;31mERROR[m] [1;31m  AuthControllerValidationTest.testSignupWithShortPasswordReturns400:55 Status expected:<400> but was:<500>[m
+[[1;34mINFO[m] 
+[[1;31mERROR[m] [1;31mTests run: 5, Failures: 3, Errors: 0, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;31mBUILD FAILURE[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  15.307 s
+[[1;34mINFO[m] Finished at: 2026-04-13T20:32:51+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;31mERROR[m] Failed to execute goal [32morg.apache.maven.plugins:maven-surefire-plugin:3.5.3:test[m [1m(default-test)[m on project [36mpir-rdf[m: [1;31mThere are test failures.[m
+[[1;31mERROR[m] [1;31m[m
+[[1;31mERROR[m] [1;31mSee /home/minh/minh_quan/Documents/Antibes/Course/S2/Projet_DS4H/annotations_pir_plugin-main/API/target/surefire-reports for the individual test results.[m
+[[1;31mERROR[m] [1;31mSee dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.[m
+[[1;31mERROR[m] -> [1m[Help 1][m
+[[1;31mERROR[m] 
+[[1;31mERROR[m] To see the full stack trace of the errors, re-run Maven with the [1m-e[m switch.
+[[1;31mERROR[m] Re-run Maven using the [1m-X[m switch to enable full debug logging.
+[[1;31mERROR[m] 
+[[1;31mERROR[m] For more information about the errors and possible solutions, please read the following articles:
+[[1;31mERROR[m] [1m[Help 1][m http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

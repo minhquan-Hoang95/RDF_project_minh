@@ -82,8 +82,8 @@ public class RequestFilterConfig extends OncePerRequestFilter {
         String jwt = parseJwt(request);
         boolean isPublicEndpoint = this.authRequestMatcher.requestMatches(uri) || uri.startsWith("/api/auth");
 
-        if (jwt != null) {
-            if (correctJwt(jwt)) {
+        if (!isPublicEndpoint) {
+            if (jwt != null && correctJwt(jwt)) {
                 String id = this.jwtUtilService.getIdFromToken(jwt);
                 UserDetails user = this.customUserDetailsService.loadUserById(id);
 
@@ -92,17 +92,13 @@ public class RequestFilterConfig extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else if (!isPublicEndpoint) {
-                // Only return error if endpoint IS NOT public AND token is invalid
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("text/plain");
-                response.getWriter().write("Invalid bearer token.");
+                response.getWriter().write("Invalid or missing bearer token.");
                 response.getWriter().flush();
-                return; // Stop processing the filter chain
+                return;
             }
-        } else if (!isPublicEndpoint) {
-            // No token and NOT a public endpoint -> handled by Spring Security but we can be explicit here
-            // We let Spring Security handle 401/403 based on config
         }
 
         filterChain.doFilter(request, response);

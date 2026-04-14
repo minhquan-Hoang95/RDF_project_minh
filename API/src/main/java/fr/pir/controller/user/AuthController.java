@@ -89,6 +89,9 @@ public class AuthController {
                     .body(this.authService.login(loginRequest.getEmail(),
                                                 loginRequest.getPassword(),
                                                 request));
+        } catch (IllegalArgumentException e) {
+            L.warn("Login validation error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (NotFoundException e) {
             L.error("User not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");

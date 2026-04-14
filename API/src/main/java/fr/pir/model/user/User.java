@@ -24,6 +24,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -62,10 +63,18 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Size(min = 8, max = 255, message = "Password must be at least 8 characters")
-    @NotBlank(message = "Password is required")
     @Column(nullable = false)
     private String password = "***";
+
+    // Holds the raw password submitted in requests, used only for @Valid validation.
+    // Not persisted — the encoded value in `password` is what gets saved.
+    // @JsonIgnore prevents this field from appearing in API responses or being set
+    // directly from JSON (it is only set via setPassword()).
+    @Transient
+    @JsonIgnore
+    @Size(min = 8, max = 255, message = "Password must be at least 8 characters")
+    @NotBlank(message = "Password is required")
+    private String rawPassword;
 
     @Column(nullable = false)
     private boolean activate = false;
@@ -91,6 +100,7 @@ public class User {
     private Set<Campaign> campaignsParticipated = new HashSet<>();
 
     public void setPassword(String password) {
+        this.rawPassword = password;
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         this.password = encoder.encode(password);
     }

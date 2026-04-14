@@ -28,8 +28,17 @@ public class AuthService {
     @Autowired
     private JwtUtilService jwtUtilService;
 
+    private static final String EMAIL_REGEX = "^[\\w\\-\\.]+@([\\w\\-]+\\.)+[\\w\\-]{2,4}$";
+
     public String login(String email, String password, HttpServletRequest request) throws Exception {
         L.debug("email : {}", email);
+
+        if (email == null || !email.matches(EMAIL_REGEX)) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
+        if (password == null || password.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
+        }
 
         User user = this.userService.getUserByEmail(email);
 
